@@ -1,0 +1,10 @@
+
+.name-suggestions span {
+    display: inline-block;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.name-suggestions span:hover {
+    font-weight: bold;
+}

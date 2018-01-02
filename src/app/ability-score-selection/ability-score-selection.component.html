@@ -1,0 +1,27 @@
+<h2>Ability Score Selection</h2>
+<p>
+  Select your ability scores:
+</p>
+<table class="table">
+  <tr>
+    <th>Ability</th>
+    <th>Base</th>
+    <th>Racial</th>
+    <th>Total</th>
+    <th>Bonus</th>
+  </tr>
+  <tr *ngFor="let ability of abilityScoreNames">
+    <td>{{ability.substr(0,1).toUpperCase() + ability.substr(1)}}</td>
+    <td>
+      <select [(ngModel)]="selectedScores[ability]" (change)="selectedScoreChanged(ability)">
+        <option [value]="0"></option>
+        <option [value]="selectedScores[ability]" *ngIf="selectedScores[ability] && selectedScores[ability] !== 'undefined'">{{selectedScores[ability]}}</option>
+        <option *ngFor="let score of filterAvailableScores()" [value]="score" [selected]="score === selectedScores[ability]">{{score}}</option>
+      </select>
+    </td>
+    <td>{{character.race.abilityScores[ability]}}</td>
+    <td>{{character.race.abilityScores[ability] + selectedScores[ability]}}</td>
+    <td>{{getAbilityBonus(character.race.abilityScores[ability] + selectedScores[ability])}}</td>
+  </tr>
+</table>
+<button *ngIf="areAllAbilitiesSelected()" (click)="submitAbilityScores()">Lock 'em in! Let's go!</button>
