@@ -167,7 +167,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    Welcome to {{title}}!\n  </h1>\n</div>\n<div>\n   <race-selection (onComplete)=\"handleRaceSelection($event)\" *ngIf=\"step==1\"></race-selection>\n   <ability-score-selection (onComplete)=\"handleAbilitySelection()\" [character]=\"character\" *ngIf=\"step==2\"></ability-score-selection>\n</div>\n<footer style=\"margin-bottom:60px;\"></footer>\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>Traveler-Style 5e Character Generator</h1>\n</div>\n<div>\n   <race-selection (onComplete)=\"handleRaceSelection($event)\" *ngIf=\"step==1\"></race-selection>\n   <name-selection (onComplete)=\"handleNameSelection()\" [character]=\"character\" *ngIf=\"step==2\"></name-selection>\n   <ability-score-selection (onComplete)=\"handleAbilitySelection()\" [character]=\"character\" *ngIf=\"step==3\"></ability-score-selection>\n   <background-selection (onComplete)=\"handleBackgroundSelection()\" [character]=\"character\" *ngIf=\"step==4\"></background-selection>\n</div>\n<footer style=\"margin-bottom:60px;\"></footer>\n"
 
 /***/ }),
 
@@ -176,6 +176,7 @@ module.exports = "<!--The content below is only a placeholder and can be replace
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__character__ = __webpack_require__("../../../../../src/app/character.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -183,19 +184,44 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 
+
+var devStep = 0;
+var devData = [
+    '{"race":{"name":"Dwarf","description":"You are a short, stout and extremely hardy humanoid. Many dwarves make their homes in the earth and under mountains.","abilityScores":{"strength":0,"dexterity":0,"constitution":2,"intelligence":0,"wisdom":1,"charisma":0},"age":{"term":20,"startingAge":50,"agingStarts":110,"advancedAging":310},"speed":25,"features":[{"name":"Darkvision","text":"You have darkvision (You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t dicern color in darkness, only shades of gray)."},{"name":"Dwarven Resilience","text":"You have advantage on saving throws against poison, and you have resistance to poison damage."},{"name":"Dwarven Toughness","text":"Your hit point maximum increases by 1, and it increases by 1 every time you gain a level."},{"name":"Stout","text":"Your speed is not reduced by wearing heavy armor."}],"sizeFactors":{"category":"medium","description":"Squat and stocky, your size is medium.","baseHeight":44,"heightModifier":{"count":2,"sides":4},"baseWeight":115,"weightModifier":{"count":2,"sides":6},"averageHeight":49},"naming":{"race":"Dwarvish"}},"name":"as","sex":"Male","size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":47,"weight":127},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[]}',
+    '{"race":{"name":"Dwarf","description":"You are a short, stout and extremely hardy humanoid. Many dwarves make their homes in the earth and under mountains.","abilityScores":{"strength":0,"dexterity":0,"constitution":2,"intelligence":0,"wisdom":1,"charisma":0},"age":{"term":20,"startingAge":50,"agingStarts":110,"advancedAging":310},"speed":25,"features":[{"name":"Darkvision","text":"You have darkvision (You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t dicern color in darkness, only shades of gray)."},{"name":"Dwarven Resilience","text":"You have advantage on saving throws against poison, and you have resistance to poison damage."},{"name":"Dwarven Toughness","text":"Your hit point maximum increases by 1, and it increases by 1 every time you gain a level."},{"name":"Stout","text":"Your speed is not reduced by wearing heavy armor."}],"sizeFactors":{"category":"medium","description":"Squat and stocky, your size is medium.","baseHeight":44,"heightModifier":{"count":2,"sides":4},"baseWeight":115,"weightModifier":{"count":2,"sides":6},"averageHeight":49},"naming":{"race":"Dwarvish"}},"name":"as","sex":"Male","size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":47,"weight":127},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[]}',
+];
 var AppComponent = (function () {
     function AppComponent() {
         this.title = 'app';
         this.step = 1;
+        if (devStep) {
+            __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */].parse(devData[devStep - 2]);
+            this.character = JSON.parse(devData[devStep - 2]);
+            this.step = devStep;
+        }
     }
     AppComponent.prototype.handleRaceSelection = function (character) {
         this.character = character;
         this.step++;
+        if (devStep)
+            this.logCharacter();
+    };
+    AppComponent.prototype.handleNameSelection = function () {
+        this.step++;
+        if (devStep)
+            this.logCharacter();
     };
     AppComponent.prototype.handleAbilitySelection = function () {
-        console.log(this.character);
         this.step++;
+        if (devStep)
+            this.logCharacter();
+    };
+    AppComponent.prototype.logCharacter = function () {
+        console.log(this.character);
     };
     return AppComponent;
 }());
@@ -204,7 +230,8 @@ AppComponent = __decorate([
         selector: 'app-root',
         template: __webpack_require__("../../../../../src/app/app.component.html"),
         styles: [__webpack_require__("../../../../../src/app/app.component.css")]
-    })
+    }),
+    __metadata("design:paramtypes", [])
 ], AppComponent);
 
 //# sourceMappingURL=app.component.js.map
@@ -225,6 +252,8 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__dice_service__ = __webpack_require__("../../../../../src/app/dice.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__race_selection_race_selection_component__ = __webpack_require__("../../../../../src/app/race-selection/race-selection.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ability_score_selection_ability_score_selection_component__ = __webpack_require__("../../../../../src/app/ability-score-selection/ability-score-selection.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__background_selection_background_selection_component__ = __webpack_require__("../../../../../src/app/background-selection/background-selection.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__name_selection_name_selection_component__ = __webpack_require__("../../../../../src/app/name-selection/name-selection.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -232,6 +261,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -252,7 +283,9 @@ AppModule = __decorate([
         declarations: [
             __WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */],
             __WEBPACK_IMPORTED_MODULE_8__race_selection_race_selection_component__["a" /* RaceSelectionComponent */],
-            __WEBPACK_IMPORTED_MODULE_9__ability_score_selection_ability_score_selection_component__["a" /* AbilityScoreSelectionComponent */]
+            __WEBPACK_IMPORTED_MODULE_9__ability_score_selection_ability_score_selection_component__["a" /* AbilityScoreSelectionComponent */],
+            __WEBPACK_IMPORTED_MODULE_10__background_selection_background_selection_component__["a" /* BackgroundSelectionComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__name_selection_name_selection_component__["a" /* NameSelectionComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -269,6 +302,92 @@ AppModule = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../src/app/background-selection/background-selection.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/background-selection/background-selection.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2>Background Selection for {{character.name}}</h2>\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li *ngFor=\"let b of backgrounds\" (click)=\"selectBackground(b)\" [ngClass]=\"{'selected': selectedBackground && selectedBackground.name === b.name}\">\n        {{b.name}}\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <div *ngIf=\"selectedBackground\">\n      <h3>{{selectedBackground.name}}</h3>\n      <p>{{selectedBackground.description}}</p>\n      <p *ngFor=\"let f of selectedBackground.features\">\n        <strong>{{f.name}}:</strong> {{f.text}}\n      </p>\n      <p>\n        <strong>Languages:</strong> You can speak, read and write {{getBackgroundLanguageDisplay()}}\n      </p>\n    </div>\n  </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/background-selection/background-selection.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__data_backgrounds_index__ = __webpack_require__("../../../../../src/app/data/backgrounds/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__character__ = __webpack_require__("../../../../../src/app/character.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BackgroundSelectionComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var BackgroundSelectionComponent = (function () {
+    function BackgroundSelectionComponent() {
+        this.onComplete = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]();
+        this.backgrounds = __WEBPACK_IMPORTED_MODULE_1__data_backgrounds_index__["a" /* backgrounds */];
+    }
+    BackgroundSelectionComponent.prototype.getBackgroundLanguageDisplay = function () {
+        var lang = this.selectedBackground.languages.slice();
+        if (lang.length < 2) {
+            return lang[0] + '.';
+        }
+        var lastTwo = lang.splice(lang.length - 2, 2).join(' and ');
+        lang.push(lastTwo);
+        return lang.join(', ') + '.';
+    };
+    BackgroundSelectionComponent.prototype.selectBackground = function (b) {
+        this.selectedBackground = b;
+    };
+    return BackgroundSelectionComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__character__["a" /* Character */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__character__["a" /* Character */]) === "function" && _a || Object)
+], BackgroundSelectionComponent.prototype, "character", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["K" /* Output */])(),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]) === "function" && _b || Object)
+], BackgroundSelectionComponent.prototype, "onComplete", void 0);
+BackgroundSelectionComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
+        selector: 'background-selection',
+        template: __webpack_require__("../../../../../src/app/background-selection/background-selection.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/background-selection/background-selection.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], BackgroundSelectionComponent);
+
+var _a, _b;
+//# sourceMappingURL=background-selection.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/character.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -277,10 +396,8 @@ AppModule = __decorate([
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Character; });
 
 var Character = (function () {
-    function Character(race, name, sex) {
+    function Character(race) {
         this.race = race;
-        this.name = name;
-        this.sex = sex;
         this.size = __WEBPACK_IMPORTED_MODULE_0__race_service__["a" /* RaceService */].getSize(this.race);
         this.abilityScores = {
             strength: 0,
@@ -293,6 +410,12 @@ var Character = (function () {
         this.skills = [];
         this.events = [];
     }
+    Character.prototype.setSex = function (sex) {
+        this.sex = sex;
+    };
+    Character.prototype.setName = function (name) {
+        this.name = name;
+    };
     Character.getAbilityModifier = function (score) {
         return Math.floor(score / 2 - 5);
     };
@@ -300,10 +423,679 @@ var Character = (function () {
         var theScore = this.abilityScores[scoreName];
         return Math.floor(theScore / 2 - 5);
     };
+    Character.prototype.setBackground = function (background) {
+        this.background = background;
+    };
+    Character.prototype.getRacialTraits = function () {
+        return this.race.features;
+    };
+    Character.prototype.getBackgroundTraits = function () {
+        return this.background ? this.background.features : [];
+    };
+    Character.prototype.getTraitsAndFeatures = function () {
+        return this.getRacialTraits().concat(this.getBackgroundTraits());
+    };
+    Character.parse = function (str) {
+        var cdata = JSON.parse(str);
+        var c = new Character(cdata.race);
+        c.setName(cdata.name);
+        c.setSex(cdata.sex);
+        c.abilityScores = cdata.abilityScores;
+        c.background = cdata.background;
+        c.size = cdata.size;
+        c.skills = cdata.skills;
+        return c;
+    };
     return Character;
 }());
 
 //# sourceMappingURL=character.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/cityUrchin.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__skill_enum__ = __webpack_require__("../../../../../src/app/skill.enum.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return cityUrchin; });
+
+var cityUrchin = {
+    name: 'City Urchin',
+    description: 'You grew up alone on the streets of the big city, or at least it felt that way. You struggled to survive, fending for yourself and fighting fiercely over food and your meagre possesions. You are shaped for better or for worse by your life growing up in desperate poverty.',
+    features: [
+        { name: 'Street Training', text: 'You have proficiency with the dagger, sling, club and unarmed strikes.' },
+        { name: 'Slippery Hands', text: 'You have proficiency in the Sleight of Hand skill.' },
+        { name: 'Street Smarts', text: 'You gain proficiency in one of the following tools: Disguise kit or Thieves’ tools.' }
+    ],
+    languages: ['Common (or if you prefer, the main language of the city you grew up in)'],
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].sleightOfHand]
+};
+//# sourceMappingURL=cityUrchin.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/dwarvenCulture.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return dwarvenCulture; });
+var dwarvenCulture = {
+    name: 'Dwarven Culture',
+    description: 'You grew up in a Dwarven nation, or in a Dwarven enclave. Dwarven culture generally revolves around the earth, so there is a focus on activities such as mining, smelting and earthworks. You have grown up in this sort of environment, and have become influenced by Dwarven culture.',
+    features: [
+        { name: 'Dwarven Combat Training', text: 'You have proficiency with the battleaxe, handaxe, light hammer, and warhammer.' },
+        { name: 'Tool Proficiency', text: 'You gain proficiency with the artisan’s tools of your choice: smith’s tools, brewer’s supplies, or mason’s tools.' },
+        { name: 'Stonecunning', text: 'Whenever you make an Intelligence (History) check related to the origin of stonework, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus.' }
+    ],
+    languages: ['Common', 'Dwarvish'],
+    skills: []
+};
+//# sourceMappingURL=dwarvenCulture.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/elvishCulture.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__skill_enum__ = __webpack_require__("../../../../../src/app/skill.enum.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return elvishCulture; });
+
+var elvishCulture = {
+    name: 'Elvish Culture',
+    description: 'You grew up in a Elvish nation, or in a Elvish enclave. Elvish culture generally revolves around the forest and their fey magical ancestry, so there is much focus on scavenging in forests and learning magical lore. You have grown up in this sort of environment, and have become influenced by Elvish Culture.',
+    features: [
+        { name: 'Elf Weapon Training', text: 'You have proficiency with the longsword, shortsword, shortbow, and longbow.' },
+        { name: 'Keen Senses', text: 'You have proficiency in the Perception skill.' }
+    ],
+    languages: ['Common', 'Elvish', 'one extra language of your choice'],
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].perception]
+};
+//# sourceMappingURL=elvishCulture.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/gnomishCulture.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return gnomishCulture; });
+var gnomishCulture = {
+    name: 'Gnomish Culture',
+    description: 'You grew up in a Gnomish nation, or in an Gnomish enclave. Halfling culture thrives on a thirst for knowledge, and reveres gadgets and tools of all kinds. You have grown up in this sort of environment, and have become influenced by Gnomish culture.',
+    features: [
+        { name: 'Artificer\'s Lore', text: 'Whenever you make an Intelligence (History) check related to magic items, alchemical objects, or technological devices, you can add twice your proficiency bonus, instead of any proficiency bonus you normally apply.' },
+        { name: 'Tinker', text: 'You have proficiency with artisan’s tools (tinker’s tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 hp). The device ceases to function after 24 hours (unless you spend 1 hour repairing it to keep the device functioning), or when you use your action to dismantle it; at that time, you can reclaim the materials used to create it. You can have up to three such devices active at a time. Consult the Players Handbook under the Gnome entry for a list of devices you can create, or consult your Game Master.' }
+    ],
+    languages: ['Common', 'Gnomish'],
+    skills: []
+};
+//# sourceMappingURL=gnomishCulture.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/halflingCulture.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return halflingCulture; });
+var halflingCulture = {
+    name: 'Halfling Culture',
+    description: 'You grew up in a Halfing nation, or in an Halfling enclave. Halfling culture revolves around food and community, and have a deep sense of loyalty and sense of duty to others. You have grown up in this sort of environment, and have become influenced by Halfling culture.',
+    features: [
+        { name: 'Brave', text: 'You have advantage on saving throws against being frightened.' },
+        { name: 'Food Connoisseur', text: 'Whenever you make an Intelligence (History) check related to the origin of a particular dish, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus.' }
+    ],
+    languages: ['Common', 'Halfling'],
+    skills: []
+};
+//# sourceMappingURL=halflingCulture.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dwarvenCulture__ = __webpack_require__("../../../../../src/app/data/backgrounds/dwarvenCulture.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__elvishCulture__ = __webpack_require__("../../../../../src/app/data/backgrounds/elvishCulture.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__halflingCulture__ = __webpack_require__("../../../../../src/app/data/backgrounds/halflingCulture.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gnomishCulture__ = __webpack_require__("../../../../../src/app/data/backgrounds/gnomishCulture.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__orcishCulture__ = __webpack_require__("../../../../../src/app/data/backgrounds/orcishCulture.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__cityUrchin__ = __webpack_require__("../../../../../src/app/data/backgrounds/cityUrchin.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__nobility__ = __webpack_require__("../../../../../src/app/data/backgrounds/nobility.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__wilderness__ = __webpack_require__("../../../../../src/app/data/backgrounds/wilderness.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return backgrounds; });
+
+
+
+
+
+
+
+
+var backgrounds = [
+    __WEBPACK_IMPORTED_MODULE_0__dwarvenCulture__["a" /* dwarvenCulture */],
+    __WEBPACK_IMPORTED_MODULE_1__elvishCulture__["a" /* elvishCulture */],
+    __WEBPACK_IMPORTED_MODULE_2__halflingCulture__["a" /* halflingCulture */],
+    __WEBPACK_IMPORTED_MODULE_3__gnomishCulture__["a" /* gnomishCulture */],
+    __WEBPACK_IMPORTED_MODULE_4__orcishCulture__["a" /* orcishCulture */],
+    __WEBPACK_IMPORTED_MODULE_5__cityUrchin__["a" /* cityUrchin */],
+    __WEBPACK_IMPORTED_MODULE_6__nobility__["a" /* nobility */],
+    __WEBPACK_IMPORTED_MODULE_7__wilderness__["a" /* wilderness */]
+];
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/nobility.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__skill_enum__ = __webpack_require__("../../../../../src/app/skill.enum.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return nobility; });
+
+var nobility = {
+    name: 'Nobility',
+    description: 'You grew up pampered and prepared for success in life. You had a decent education and servants to tend to your every whim. You understand the importance of wealth, power and prestige. And you have watched with fascinated interest the inner workings of political machinations.',
+    features: [
+        { name: 'Duelling & Jousting', text: 'You have proficiency with the longsword, rapier, lance and shortbow.' },
+        { name: 'Cultural Education', text: 'You have proficiency in the History skill, as well as the Persuasion skill.' },
+        { name: 'Birthright', text: 'Your noble birth means that, when travelling in lands that recognise your nation, commoners will treat you with respect and deference (at least until your reputation or gold runs out), and other nobles will regard you as in the same social sphere. You may need to provide proof of your status; this can be in the form of documents on your person or passing the scrunity of a retainer trained in the extensive lineage of nobility of your nation.' }
+    ],
+    languages: ['Common', 'one extra language of your choice'],
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].history, __WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].persuasion]
+};
+//# sourceMappingURL=nobility.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/orcishCulture.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__skill_enum__ = __webpack_require__("../../../../../src/app/skill.enum.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return orcishCulture; });
+
+var orcishCulture = {
+    name: 'Orcish Culture',
+    description: 'You grew up in a Orcish nation, or in an Orcish enclave. Orcish culture is generally unrefined, reverting to barbarism and savagery. You have grown up in this sort of environment (and somehow survived), and have become influenced by Orcish culture.',
+    features: [
+        { name: 'Orcish Combat Training', text: 'You have proficiency with the greataxe, hand-axe, javelin and spear.' },
+        { name: 'Menacing', text: 'You have proficiency in the Intimidation skill.' }
+    ],
+    languages: ['Common', 'Orcish'],
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].intimidation]
+};
+//# sourceMappingURL=orcishCulture.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/backgrounds/wilderness.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__skill_enum__ = __webpack_require__("../../../../../src/app/skill.enum.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return wilderness; });
+
+var wilderness = {
+    name: 'Wilderness',
+    description: 'You grew up beyond civilization, and not only survived but thrived. You lived off the land for years with minimal contact with the outside world. Technology and crowded streets make you feel uncomfortable because it is just so.... Unnatural.',
+    features: [
+        { name: 'Hunter', text: 'You have proficiency with the spear, shortbow, javelin and dagger.' },
+        { name: 'Instincts', text: 'You have proficiency in the Survival skill.' },
+        { name: 'Gatherer', text: 'You have advantage on any navigation-related skill checks for areas you are familiar with. In addition, you can find food and fresh water for yourself and up to five other people each day, provided that the land offers suitable food and water supplies.' }
+    ],
+    languages: ['Common (or if you prefer, the primary language of the closest settlement)'],
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].survival]
+};
+//# sourceMappingURL=wilderness.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/dragonborn.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return dragonborn; });
+var dragonborn = {
+    name: 'Dragonborn',
+    description: 'You are a humanoid with pronounced draconic heritage.',
+    abilityScores: {
+        strength: 2,
+        dexterity: 0,
+        constitution: 0,
+        intelligence: 0,
+        wisdom: 0,
+        charisma: 1
+    },
+    age: {
+        term: 4,
+        startingAge: 15,
+        agingStarts: 31,
+        advancedAging: 75
+    },
+    speed: 30,
+    features: [
+        { name: 'Draconic Ancestry', text: "You have draconic ancestry. Choose one type from the Draconic Ancestry table in the Player's Handbook. Your breath weapon and damage resistance are determined by the dragon type, as shown in the table." },
+        { name: 'Breath Weapon', text: "You can use your action to exhale destructive energy. Your draconic ancestry determines the size, shape, and damage type of the exhalation. When you use your breath weapon, each creature in the area of the exhalation must make a saving throw, the type of which is determined by your draconic ancestry. The DC for this saving throw equals 8 + your Constitution modifier + your proficiency bonus. A creature takes 2d6 damage on a failed save, and half as much damage on a successful one. The damage increases to 3d6 at 6th level, 4d6 at 11th level, and 5d6 at 16th level. After you use your breath weapon, you can’t se it again until you complete a short or long rest." },
+        { name: 'Damage Resistance', text: "You have resistance to the damage type associated with your draconic ancestry." }
+    ],
+    sizeFactors: {
+        category: 'medium',
+        description: 'Dragonborn are taller and heavier than humans, often standing well over 6 feet tall and averaging almost 250 pounds. Your size is Medium.',
+        baseHeight: (5 * 12) + 6,
+        heightModifier: { count: 2, sides: 8 },
+        baseWeight: 175,
+        weightModifier: { count: 2, sides: 6 }
+    },
+    naming: {
+        race: 'Draconic'
+    }
+};
+//# sourceMappingURL=dragonborn.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/dwarf.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return dwarf; });
+
+var dwarf = {
+    name: 'Dwarf',
+    description: 'You are a short, stout and extremely hardy humanoid. Many dwarves make their homes in the earth and under mountains.',
+    abilityScores: {
+        strength: 0,
+        dexterity: 0,
+        constitution: 2,
+        intelligence: 0,
+        wisdom: 1,
+        charisma: 0
+    },
+    age: {
+        term: 20,
+        startingAge: 50,
+        agingStarts: 110,
+        advancedAging: 310
+    },
+    speed: 25,
+    features: [
+        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
+        { name: 'Dwarven Resilience', text: 'You have advantage on saving throws against poison, and you have resistance to poison damage.' },
+        { name: 'Dwarven Toughness', text: 'Your hit point maximum increases by 1, and it increases by 1 every time you gain a level.' },
+        { name: 'Stout', text: 'Your speed is not reduced by wearing heavy armor.' }
+    ],
+    sizeFactors: {
+        category: 'medium',
+        description: 'Squat and stocky, your size is medium.',
+        baseHeight: (3 * 12) + 8,
+        heightModifier: { count: 2, sides: 4 },
+        baseWeight: 115,
+        weightModifier: { count: 2, sides: 6 },
+        averageHeight: 49
+    },
+    naming: {
+        race: 'Dwarvish'
+    }
+};
+//# sourceMappingURL=dwarf.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/elf.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return elf; });
+
+var elf = {
+    name: 'Elf',
+    description: 'You are a lithe, graceful and extraordinarily beautiful humanoid. Many elves make their homes in wild forested areas.',
+    abilityScores: {
+        strength: 0,
+        dexterity: 2,
+        constitution: 0,
+        intelligence: 1,
+        wisdom: 0,
+        charisma: 0
+    },
+    age: {
+        term: 45,
+        startingAge: 100,
+        agingStarts: 280,
+        advancedAging: 685
+    },
+    speed: 30,
+    features: [
+        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
+        { name: 'Fey Ancestry', text: 'You have advantage on saving throws against being charmed, and magic can\'t put you to sleep.' },
+        { name: 'Cantrip', text: 'You know one cantrip of your choice from the wizard spell list. Intelligence is your spellcasting ability for it.' },
+        { name: 'Trance', text: 'Elves don\'t need to sleep. Instead, they meditate deeply, remaining semiconscious, for 4 hours a day. While meditating, you can dream after a fashion; such dreams are actually mental exercises that have become reflexive through years of practice. After resting in this way, you gain the same benefit that a human does from 8 hours of sleep.' }
+    ],
+    sizeFactors: {
+        category: 'medium',
+        description: 'Tall and slender, your size is medium.',
+        baseHeight: (4 * 12) + 6,
+        heightModifier: { count: 2, sides: 4 },
+        baseWeight: 90,
+        weightModifier: { count: 2, sides: 6 }
+    },
+    naming: {
+        race: 'Elvish'
+    }
+};
+//# sourceMappingURL=elf.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/gnome.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return gnome; });
+
+var gnome = {
+    name: 'Gnome',
+    description: 'You are a small, vibrant, and extraordinarily playful humanoid.',
+    abilityScores: {
+        strength: 0,
+        dexterity: 0,
+        constitution: 1,
+        intelligence: 2,
+        wisdom: 0,
+        charisma: 0
+    },
+    age: {
+        term: 26,
+        startingAge: 40,
+        agingStarts: 144,
+        advancedAging: 390
+    },
+    speed: 25,
+    features: [
+        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
+        { name: 'Gnome Cunning', text: "You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic." }
+    ],
+    sizeFactors: {
+        category: 'small',
+        description: 'Quite short, but resilient, your size is small.',
+        baseHeight: (2 * 12) + 11,
+        heightModifier: { count: 2, sides: 4 },
+        baseWeight: 35,
+        weightModifier: { count: 1, sides: 1 }
+    },
+    naming: {
+        race: 'Sioux'
+    }
+};
+//# sourceMappingURL=gnome.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/halfElf.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return halfElf; });
+
+var halfElf = {
+    name: 'Half-elf',
+    description: 'You are a half-breed, caught between the worlds of elves and men.',
+    abilityScores: {
+        strength: 0,
+        dexterity: 0,
+        constitution: 0,
+        intelligence: 0,
+        wisdom: 0,
+        charisma: 2
+    },
+    age: {
+        term: 10,
+        startingAge: 20,
+        agingStarts: 60,
+        advancedAging: 160
+    },
+    speed: 30,
+    features: [
+        { name: 'Half-Elf Versatility', text: 'Increase two ability scores, other than Charisma, by 1 each.' },
+        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
+        { name: 'Fey Ancestry', text: "You have advantage on saving throws against being charmed, and magic can't put you to sleep." }
+    ],
+    sizeFactors: {
+        category: 'medium',
+        description: 'Half-elves are about the same size as humans. Your size is medium.',
+        baseHeight: (4 * 12) + 9,
+        heightModifier: { count: 2, sides: 8 },
+        baseWeight: 110,
+        weightModifier: { count: 2, sides: 4 }
+    },
+    naming: {
+        race: 'Human'
+    }
+};
+//# sourceMappingURL=halfElf.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/halfOrc.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return halfOrc; });
+
+var halfOrc = {
+    name: 'Half-orc',
+    description: 'You are a half-breed, caught between the worlds of orcs and men.',
+    abilityScores: {
+        strength: 2,
+        dexterity: 0,
+        constitution: 1,
+        intelligence: 0,
+        wisdom: 0,
+        charisma: 0
+    },
+    age: {
+        term: 4,
+        startingAge: 14,
+        agingStarts: 30,
+        advancedAging: 60
+    },
+    speed: 30,
+    features: [
+        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
+        { name: 'Reletless Endurance', text: "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest." },
+        { name: 'Savage Attacks', text: "When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit." }
+    ],
+    sizeFactors: {
+        category: 'medium',
+        description: 'Half-orcs are somewhat larger and bulkier than humans, but your size is still medium.',
+        baseHeight: (4 * 12) + 10,
+        heightModifier: { count: 2, sides: 10 },
+        baseWeight: 140,
+        weightModifier: { count: 2, sides: 6 }
+    },
+    naming: {
+        race: 'Orcish'
+    }
+};
+//# sourceMappingURL=halfOrc.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/halfling.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return halfling; });
+var halfling = {
+    name: 'Halfling',
+    description: 'You are a small, practical and extraordinarily plucky humanoid.',
+    abilityScores: {
+        strength: 0,
+        dexterity: 2,
+        constitution: 0,
+        intelligence: 0,
+        wisdom: 0,
+        charisma: 1
+    },
+    age: {
+        term: 15,
+        startingAge: 20,
+        agingStarts: 80,
+        advancedAging: 230
+    },
+    speed: 25,
+    features: [
+        { name: 'Lucky', text: "When you roll a 1 on the d20 for an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll." },
+        { name: 'Halfling Nimbleness', text: "You can move through the space of any creature that is of a size larger than yours." },
+        { name: 'Naturally Stealthy', text: "You can attempt to hide even when you are obscurred only by a creature that is at least one size larger than you." }
+    ],
+    sizeFactors: {
+        category: 'small',
+        description: 'Humble in stature, your size is small.',
+        baseHeight: (2 * 12) + 7,
+        heightModifier: { count: 2, sides: 4 },
+        baseWeight: 35,
+        weightModifier: { count: 1, sides: 1 }
+    },
+    naming: {
+        race: 'Halfling'
+    }
+};
+//# sourceMappingURL=halfling.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/human.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return human; });
+var human = {
+    name: 'Human',
+    description: 'You are a standard humanoid.',
+    abilityScores: {
+        strength: 1,
+        dexterity: 1,
+        constitution: 1,
+        intelligence: 1,
+        wisdom: 1,
+        charisma: 1
+    },
+    age: {
+        term: 4,
+        startingAge: 18,
+        agingStarts: 34,
+        advancedAging: 82
+    },
+    speed: 30,
+    features: [],
+    sizeFactors: {
+        category: 'medium',
+        description: 'Humans vary widely in height and build, from barely 5 feet to well over 6 feet tall. Regardless of your position in that range, your size is Medium.',
+        baseHeight: (4 * 12) + 8,
+        heightModifier: { count: 2, sides: 10 },
+        baseWeight: 110,
+        weightModifier: { count: 2, sides: 4 }
+    },
+    naming: {
+        race: 'Human'
+    }
+};
+//# sourceMappingURL=human.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dragonborn__ = __webpack_require__("../../../../../src/app/data/races/dragonborn.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dwarf__ = __webpack_require__("../../../../../src/app/data/races/dwarf.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__elf__ = __webpack_require__("../../../../../src/app/data/races/elf.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gnome__ = __webpack_require__("../../../../../src/app/data/races/gnome.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__halfElf__ = __webpack_require__("../../../../../src/app/data/races/halfElf.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__halfling__ = __webpack_require__("../../../../../src/app/data/races/halfling.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__halfOrc__ = __webpack_require__("../../../../../src/app/data/races/halfOrc.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__human__ = __webpack_require__("../../../../../src/app/data/races/human.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__tiefling__ = __webpack_require__("../../../../../src/app/data/races/tiefling.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return races; });
+
+
+
+
+
+
+
+
+
+var races = [
+    __WEBPACK_IMPORTED_MODULE_1__dwarf__["a" /* dwarf */],
+    __WEBPACK_IMPORTED_MODULE_2__elf__["a" /* elf */],
+    __WEBPACK_IMPORTED_MODULE_5__halfling__["a" /* halfling */],
+    __WEBPACK_IMPORTED_MODULE_7__human__["a" /* human */],
+    __WEBPACK_IMPORTED_MODULE_0__dragonborn__["a" /* dragonborn */],
+    __WEBPACK_IMPORTED_MODULE_3__gnome__["a" /* gnome */],
+    __WEBPACK_IMPORTED_MODULE_4__halfElf__["a" /* halfElf */],
+    __WEBPACK_IMPORTED_MODULE_6__halfOrc__["a" /* halfOrc */],
+    __WEBPACK_IMPORTED_MODULE_8__tiefling__["a" /* tiefling */]
+];
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/data/races/tiefling.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return tiefling; });
+
+var tiefling = {
+    name: 'Tiefling',
+    description: 'You are the end result of generations of fiend blood mixing with humans.',
+    abilityScores: {
+        strength: 0,
+        dexterity: 0,
+        constitution: 0,
+        intelligence: 1,
+        wisdom: 0,
+        charisma: 2
+    },
+    age: {
+        term: 4,
+        startingAge: 18,
+        agingStarts: 34,
+        advancedAging: 82
+    },
+    speed: 30,
+    features: [
+        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
+        { name: 'Hellish Resistance', text: "You have resistance to fire damage." },
+        { name: 'Infernal Legacy', text: "You know the Thaumaturgy cantrip. When you reach 3rd level, you can cast the Hellish Rebuke spell as a 2nd level spell once with this trait and regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Darkness spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells." }
+    ],
+    sizeFactors: {
+        category: 'medium',
+        description: 'Tieflings are about the same size and build as humans. Your size is medium.',
+        baseHeight: (4 * 12) + 9,
+        heightModifier: { count: 2, sides: 8 },
+        baseWeight: 110,
+        weightModifier: { count: 2, sides: 4 }
+    },
+    naming: {
+        race: 'Fiendish',
+        sexAgnostic: true
+    }
+};
+//# sourceMappingURL=tiefling.js.map
 
 /***/ }),
 
@@ -370,6 +1162,114 @@ function rollOne(sides) {
 
 /***/ }),
 
+/***/ "../../../../../src/app/name-selection/name-selection.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".name-suggestions li {\r\n    display: inline-block;\r\n    padding: 20px;\r\n    cursor: pointer;\r\n    width: 20%;\r\n    text-align:center;\r\n}\r\n\r\n.name-suggestions li:hover {\r\n    font-weight: bold;\r\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/name-selection/name-selection.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2>Step 2: Choose your name</h2>\n\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li [ngClass]=\"{'selected': sex === 'Male'}\" (click)=\"selectSex('Male')\">Male</li>\n      <li [ngClass]=\"{'selected': sex === 'Female'}\" (click)=\"selectSex('Female')\">Female</li>\n      <li *ngIf=\"sex && name && name.length>0\" style=\"margin-top:20px;\">\n        <button class=\"btn btn-primary\" (click)=\"lockInName()\">Continue</button>\n\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <div *ngIf=\"!sex\">\n      <h4>&lt;- Choose your gender.</h4>\n    </div>\n    <div *ngIf=\"sex\">\n      <div class=\"form-group\">\n        <label for=\"name\"><h4>Name your {{sex.toLowerCase()}} {{character.race.name.toLowerCase()}}.</h4></label>\n        <input type=\"text\" class=\"form-control\" id=\"name\" \n                      aria-describedby=\"nameHelp\" placeholder=\"Enter your character's name\" [ngModel]=\"name\">\n        <small id=\"nameHelp\" class=\"form-text text-muted\">Names are important. Choose carefully.</small>\n      </div>\n      <div class=\"card\">\n        <div class=\"card-body\">\n          <div>\n            <h5 class=\"card-title\">Name suggestions:</h5>\n            <div *ngIf=\"nameSuggestionsLoading\">\n              <p style=\"text-align:center;\">\n                <span class=\"loading\" ></span>\n              </p>\n              <p style=\"text-align:center;\">\n                Loading...\n              </p>\n            </div>\n            <div *ngIf=\"nameSuggestions && nameSuggestions.length\">\n              <ul class=\"name-suggestions\">\n                <li *ngFor=\"let n of nameSuggestions\" (click)=\"selectName(n)\">{{n}}</li>\n              </ul>\n              <p style=\"text-align:center;\">\n                <button class=\"btn btn-secondary\" (click)=\"suggestNames()\">Refresh</button>\n              </p>\n            </div>\n            <p>\n              <small>\n                Name suggestions powered by <a href=\"https://donjon.bin.sh/fantasy/name/\" target=\"_blank\">donjon</a>\n              </small>\n            </p>\n            \n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/name-selection/name-selection.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__name_service__ = __webpack_require__("../../../../../src/app/name.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__character__ = __webpack_require__("../../../../../src/app/character.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NameSelectionComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var NameSelectionComponent = (function () {
+    function NameSelectionComponent(nameService) {
+        this.nameService = nameService;
+        this.onComplete = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]();
+        this.nameSuggestionsLoading = false;
+    }
+    NameSelectionComponent.prototype.suggestNames = function () {
+        var _this = this;
+        var race = this.character.race;
+        var sex = this.sex;
+        this.nameSuggestionsLoading = true;
+        this.nameSuggestions = [];
+        var namesPromise;
+        if (race.naming.sexAgnostic) {
+            namesPromise = this.nameService.getNames(race.naming.race);
+        }
+        else {
+            namesPromise = this.nameService.getNames(race.naming.race, sex);
+        }
+        namesPromise.then(function (names) {
+            _this.nameSuggestionsLoading = false;
+            _this.nameSuggestions = names;
+        }).catch(function (arg1, arg2, arg3) {
+            _this.nameSuggestionsLoading = false;
+            console.log('something went wrong...', arg1, arg2, arg3);
+        });
+    };
+    NameSelectionComponent.prototype.selectSex = function (sex) {
+        this.sex = sex;
+        this.suggestNames();
+    };
+    NameSelectionComponent.prototype.selectName = function (n) {
+        this.name = n;
+    };
+    NameSelectionComponent.prototype.lockInName = function () {
+        this.character.setSex(this.sex);
+        this.character.setName(this.name);
+        this.onComplete.emit(true);
+    };
+    return NameSelectionComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__character__["a" /* Character */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__character__["a" /* Character */]) === "function" && _a || Object)
+], NameSelectionComponent.prototype, "character", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["K" /* Output */])(),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]) === "function" && _b || Object)
+], NameSelectionComponent.prototype, "onComplete", void 0);
+NameSelectionComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
+        selector: 'name-selection',
+        template: __webpack_require__("../../../../../src/app/name-selection/name-selection.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/name-selection/name-selection.component.css")]
+    }),
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__name_service__["a" /* NameService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__name_service__["a" /* NameService */]) === "function" && _c || Object])
+], NameSelectionComponent);
+
+var _a, _b, _c;
+//# sourceMappingURL=name-selection.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/name.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -421,7 +1321,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "\r\n.name-suggestions span {\r\n    display: inline-block;\r\n    padding: 20px;\r\n    cursor: pointer;\r\n    width: 9%;\r\n    text-align:center;\r\n}\r\n\r\n.name-suggestions span:hover {\r\n    font-weight: bold;\r\n}", ""]);
+exports.push([module.i, "", ""]);
 
 // exports
 
@@ -434,7 +1334,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/race-selection/race-selection.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Race Selection</h2>\n<div>\n  <p>\n    choose your race:\n\n    <select [(ngModel)]=\"selected\" (change)=\"selectedChanged()\">\n      <option *ngFor=\"let r of races\" [value]=\"r.name\" [selected]=\"r.name === selected\">{{r.name}}</option>\n    </select>\n  </p>\n</div>\n<div *ngIf=\"selected\">\n  <h3>{{selectedRace.name}}</h3>\n  <p>\n    <strong>Sex: </strong> <select [(ngModel)]=\"sex\" (change)=\"sexChanged()\">\n      <option value=\"Male\" [selected]=\"'Male' === sex\">Male</option>\n      <option value=\"Female\" [selected]=\"'Female' === sex\">Female</option>\n    </select>\n  </p>\n  <div>\n    <p><strong>Name:</strong> <input type=\"text\" [(ngModel)]=\"name\"/> <button (click)=\"suggestNames(selectedRace, sex)\" *ngIf=\"sex\">Suggest</button></p>\n    <p class=\"name-suggestions\" *ngIf=\"nameSuggestions && nameSuggestions.length\">\n      <span *ngFor=\"let n of nameSuggestions\" (click)=\"suggestedNameClick(n)\">{{n}}</span>\n    </p>\n    <p *ngIf=\"nameSuggestionsLoading\" >\n      <span class=\"loading\" style=\"margin:20px\"></span>\n    </p>\n    <p>\n      <button *ngIf=\"readyForSubmit()\" (click)=\"finalizeRaceSelection()\">I want to be a {{selectedRace.name}}! Onward!</button>\n    </p>\n  </div>\n  <h4>Racial Features</h4>\n  <p>{{selectedRace.description}}</p>\n  <p><strong>Size: </strong>{{selectedRace.sizeFactors.description}} \n    On average you will be around {{getHeightDisplay(getAverageSize())}} tall and \n    weigh about {{getAverageSize().weight}} lbs.\n  </p>\n  <p><strong>Speed: </strong> Your base walking speed is {{selectedRace.speed}} ft.</p>\n  <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>\n  <div>\n    <p *ngFor=\"let f of selectedRace.features\"><strong>{{f.name}}:</strong> {{f.text}}</p>\n  </div>\n\n\n"
+module.exports = "<h2>Step 1: Select your race</h2>\n\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li *ngFor=\"let r of races\" (click)=\"selectRace(r)\" [ngClass]=\"{'selected': selectedRace && selectedRace.name === r.name}\">\n        {{r.name}}\n      </li>\n      <li *ngIf=\"selectedRace && !raceLocked\" style=\"margin-top:20px;\">\n        <button class=\"btn btn-primary\" (click)=\"lockInRace()\">Choose {{selectedRace.name}}</button>\n\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <div *ngIf=\"selectedRace && !raceLocked\">\n      <h3>{{selectedRace.name}}</h3>\n      <p>{{selectedRace.description}}</p>\n      <p><strong>Size: </strong>{{selectedRace.sizeFactors.description}} \n        On average you will be around {{getHeightDisplay(getAverageSize())}} tall and \n        weigh about {{getAverageSize().weight}} lbs.\n      </p>\n      <p><strong>Speed: </strong> Your base walking speed is {{selectedRace.speed}} ft.</p>\n      <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>\n      <div>\n        <p *ngFor=\"let f of selectedRace.features\"><strong>{{f.name}}:</strong> {{f.text}}</p>\n      </div>\n    </div>\n  </div>\n</div>\n\n<!-->\n        <p>\n        <strong>Sex: </strong> <select [(ngModel)]=\"sex\" (change)=\"sexChanged()\">\n          <option value=\"Male\" [selected]=\"'Male' === sex\">Male</option>\n          <option value=\"Female\" [selected]=\"'Female' === sex\">Female</option>\n        </select>\n      </p>\n      <div>\n        <p><strong>Name:</strong> <input type=\"text\" [(ngModel)]=\"name\"/> <button (click)=\"suggestNames(selectedRace, sex)\" *ngIf=\"sex\">Suggest</button></p>\n        <p class=\"name-suggestions\" *ngIf=\"nameSuggestions && nameSuggestions.length\">\n          <span *ngFor=\"let n of nameSuggestions\" (click)=\"suggestedNameClick(n)\">{{n}}</span>\n        </p>\n        <p *ngIf=\"nameSuggestionsLoading\" >\n          <span class=\"loading\" style=\"margin:20px\"></span>\n        </p>\n        <p>\n                  </p>\n      </div>\n<-->"
 
 /***/ }),
 
@@ -465,44 +1365,20 @@ var RaceSelectionComponent = (function () {
         this.raceService = raceService;
         this.nameService = nameService;
         this.onComplete = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]();
-        this.nameSuggestionsLoading = false;
         this.races = __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].races;
+        this.raceLocked = false;
     }
-    RaceSelectionComponent.prototype.selectedChanged = function () {
-        var _this = this;
-        this.selectedRace = this.races.filter(function (r) { return r.name === _this.selected; })[0];
-        this.nameSuggestions = undefined;
+    RaceSelectionComponent.prototype.selectRace = function (r) {
+        this.selectedRace = r;
     };
-    RaceSelectionComponent.prototype.sexChanged = function () {
-        this.nameSuggestions = undefined;
-    };
-    RaceSelectionComponent.prototype.suggestedNameClick = function (name) {
-        this.name = name;
+    RaceSelectionComponent.prototype.lockInRace = function () {
+        this.finalizeRaceSelection();
     };
     RaceSelectionComponent.prototype.getAverageSize = function () {
         return __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].getAverageSize(this.selectedRace);
     };
     RaceSelectionComponent.prototype.getHeightDisplay = function (s) {
         return __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].getHeightDisplay(s);
-    };
-    RaceSelectionComponent.prototype.suggestNames = function (race, sex) {
-        var _this = this;
-        this.nameSuggestionsLoading = true;
-        this.nameSuggestions = [];
-        var namesPromise;
-        if (race.naming.sexAgnostic) {
-            namesPromise = this.nameService.getNames(race.naming.race);
-        }
-        else {
-            namesPromise = this.nameService.getNames(race.naming.race, sex);
-        }
-        namesPromise.then(function (names) {
-            _this.nameSuggestionsLoading = false;
-            _this.nameSuggestions = names;
-        }).catch(function (arg1, arg2, arg3) {
-            _this.nameSuggestionsLoading = false;
-            console.log('something went wrong...', arg1, arg2, arg3);
-        });
     };
     RaceSelectionComponent.prototype.getSelectedRaceAbilityScoreMods = function () {
         var mods = __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].getAbilityModifiers(this.selectedRace);
@@ -512,11 +1388,8 @@ var RaceSelectionComponent = (function () {
             return name + ' ' + value;
         }).join(', ');
     };
-    RaceSelectionComponent.prototype.readyForSubmit = function () {
-        return this.selectedRace && this.sex && this.name;
-    };
     RaceSelectionComponent.prototype.finalizeRaceSelection = function () {
-        this.onComplete.emit(new __WEBPACK_IMPORTED_MODULE_3__character__["a" /* Character */](this.selectedRace, this.name, this.sex));
+        this.onComplete.emit(new __WEBPACK_IMPORTED_MODULE_3__character__["a" /* Character */](this.selectedRace));
     };
     return RaceSelectionComponent;
 }());
@@ -544,7 +1417,7 @@ var _a, _b, _c;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dice_service__ = __webpack_require__("../../../../../src/app/dice.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__races_index__ = __webpack_require__("../../../../../src/app/races/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__data_races_index__ = __webpack_require__("../../../../../src/app/data/races/index.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RaceService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -617,17 +1490,7 @@ var RaceService = (function () {
     };
     return RaceService;
 }());
-RaceService.races = [
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["a" /* dwarf */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["b" /* elf */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["c" /* halfling */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["d" /* human */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["e" /* dragonborn */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["f" /* gnome */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["g" /* halfElf */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["h" /* halfOrc */],
-    __WEBPACK_IMPORTED_MODULE_2__races_index__["i" /* tiefling */]
-];
+RaceService.races = __WEBPACK_IMPORTED_MODULE_2__data_races_index__["a" /* races */];
 RaceService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
     __metadata("design:paramtypes", [])
@@ -648,445 +1511,32 @@ var darkvision = 'You have darkvision (You can see in dim light within 60 feet o
 
 /***/ }),
 
-/***/ "../../../../../src/app/races/dragonborn.ts":
+/***/ "../../../../../src/app/skill.enum.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return dragonborn; });
-var dragonborn = {
-    name: 'Dragonborn',
-    description: 'You are a humanoid with pronounced draconic heritage.',
-    abilityScores: {
-        strength: 2,
-        dexterity: 0,
-        constitution: 0,
-        intelligence: 0,
-        wisdom: 0,
-        charisma: 1
-    },
-    age: {
-        term: 4,
-        startingAge: 15,
-        agingStarts: 31,
-        advancedAging: 75
-    },
-    speed: 30,
-    features: [
-        { name: 'Draconic Ancestry', text: "You have draconic ancestry. Choose one type from the Draconic Ancestry table in the Player's Handbook. Your breath weapon and damage resistance are determined by the dragon type, as shown in the table." },
-        { name: 'Breath Weapon', text: "You can use your action to exhale destructive energy. Your draconic ancestry determines the size, shape, and damage type of the exhalation. When you use your breath weapon, each creature in the area of the exhalation must make a saving throw, the type of which is determined by your draconic ancestry. The DC for this saving throw equals 8 + your Constitution modifier + your proficiency bonus. A creature takes 2d6 damage on a failed save, and half as much damage on a successful one. The damage increases to 3d6 at 6th level, 4d6 at 11th level, and 5d6 at 16th level. After you use your breath weapon, you can’t se it again until you complete a short or long rest." },
-        { name: 'Damage Resistance', text: "You have resistance to the damage type associated with your draconic ancestry." }
-    ],
-    sizeFactors: {
-        category: 'medium',
-        description: 'Dragonborn are taller and heavier than humans, often standing well over 6 feet tall and averaging almost 250 pounds. Your size is Medium.',
-        baseHeight: (5 * 12) + 6,
-        heightModifier: { count: 2, sides: 8 },
-        baseWeight: 175,
-        weightModifier: { count: 2, sides: 6 }
-    },
-    naming: {
-        race: 'Draconic'
-    }
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Skills; });
+var Skills = {
+    athletics: { id: 0, name: 'Athletics', abilityScore: 'strength' },
+    acrobatics: { id: 1, name: 'Acrobatics', abilityScore: 'dexterity' },
+    sleightOfHand: { id: 2, name: 'Sleight of Hand', abilityScore: 'dexterity' },
+    stealth: { id: 3, name: 'stealth', abilityScore: 'dexterity' },
+    arcana: { id: 4, name: 'Arcana', abilityScore: 'intelligence' },
+    history: { id: 5, name: 'History', abilityScore: 'intelligence' },
+    investigation: { id: 6, name: 'Investigation', abilityScore: 'intelligence' },
+    nature: { id: 7, name: 'Nature', abilityScore: 'intelligence' },
+    religion: { id: 8, name: 'Religion', abilityScore: 'intelligence' },
+    animalHandling: { id: 9, name: 'Animal Handling', abilityScore: 'wisdom' },
+    insight: { id: 10, name: 'Insight', abilityScore: 'wisdom' },
+    medicine: { id: 11, name: 'Medicine', abilityScore: 'wisdom' },
+    perception: { id: 12, name: 'Perception', abilityScore: 'wisdom' },
+    survival: { id: 13, name: 'Survival', abilityScore: 'wisdom' },
+    deception: { id: 14, name: 'Deception', abilityScore: 'charisma' },
+    intimidation: { id: 15, name: 'Intimidation', abilityScore: 'charisma' },
+    performance: { id: 16, name: 'Performance', abilityScore: 'charisma' },
+    persuasion: { id: 17, name: 'Persuasion', abilityScore: 'charisma' }
 };
-//# sourceMappingURL=dragonborn.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/dwarf.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return dwarf; });
-
-var dwarf = {
-    name: 'Dwarf',
-    description: 'You are a short, stout and extremely hardy humanoid. Many dwarves make their homes in the earth and under mountains.',
-    abilityScores: {
-        strength: 0,
-        dexterity: 0,
-        constitution: 2,
-        intelligence: 0,
-        wisdom: 1,
-        charisma: 0
-    },
-    age: {
-        term: 20,
-        startingAge: 50,
-        agingStarts: 110,
-        advancedAging: 310
-    },
-    speed: 25,
-    features: [
-        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
-        { name: 'Dwarven Resilience', text: 'You have advantage on saving throws against poison, and you have resistance to poison damage.' },
-        { name: 'Dwarven Toughness', text: 'Your hit point maximum increases by 1, and it increases by 1 every time you gain a level.' },
-        { name: 'Stout', text: 'Your speed is not reduced by wearing heavy armor.' }
-    ],
-    sizeFactors: {
-        category: 'medium',
-        description: 'Squat and stocky, your size is medium.',
-        baseHeight: (3 * 12) + 8,
-        heightModifier: { count: 2, sides: 4 },
-        baseWeight: 115,
-        weightModifier: { count: 2, sides: 6 },
-        averageHeight: 49
-    },
-    naming: {
-        race: 'Dwarvish'
-    }
-};
-//# sourceMappingURL=dwarf.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/elf.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return elf; });
-
-var elf = {
-    name: 'Elf',
-    description: 'You are a lithe, graceful and extraordinarily beautiful humanoid. Many elves make their homes in wild forested areas.',
-    abilityScores: {
-        strength: 0,
-        dexterity: 2,
-        constitution: 0,
-        intelligence: 1,
-        wisdom: 0,
-        charisma: 0
-    },
-    age: {
-        term: 45,
-        startingAge: 100,
-        agingStarts: 280,
-        advancedAging: 685
-    },
-    speed: 30,
-    features: [
-        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
-        { name: 'Fey Ancestry', text: 'You have advantage on saving throws against being charmed, and magic can\'t put you to sleep.' },
-        { name: 'Cantrip', text: 'You know one cantrip of your choice from the wizard spell list. Intelligence is your spellcasting ability for it.' },
-        { name: 'Trance', text: 'Elves don\'t need to sleep. Instead, they meditate deeply, remaining semiconscious, for 4 hours a day. While meditating, you can dream after a fashion; such dreams are actually mental exercises that have become reflexive through years of practice. After resting in this way, you gain the same benefit that a human does from 8 hours of sleep.' }
-    ],
-    sizeFactors: {
-        category: 'medium',
-        description: 'Tall and slender, your size is medium.',
-        baseHeight: (4 * 12) + 6,
-        heightModifier: { count: 2, sides: 4 },
-        baseWeight: 90,
-        weightModifier: { count: 2, sides: 6 }
-    },
-    naming: {
-        race: 'Elvish'
-    }
-};
-//# sourceMappingURL=elf.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/gnome.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return gnome; });
-
-var gnome = {
-    name: 'Gnome',
-    description: 'You are a small, vibrant, and extraordinarily playful humanoid.',
-    abilityScores: {
-        strength: 0,
-        dexterity: 0,
-        constitution: 1,
-        intelligence: 2,
-        wisdom: 0,
-        charisma: 0
-    },
-    age: {
-        term: 26,
-        startingAge: 40,
-        agingStarts: 144,
-        advancedAging: 390
-    },
-    speed: 25,
-    features: [
-        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
-        { name: 'Gnome Cunning', text: "You have advantage on all Intelligence, Wisdom, and Charisma saving throws against magic." }
-    ],
-    sizeFactors: {
-        category: 'small',
-        description: 'Quite short, but resilient, your size is small.',
-        baseHeight: (2 * 12) + 11,
-        heightModifier: { count: 2, sides: 4 },
-        baseWeight: 35,
-        weightModifier: { count: 1, sides: 1 }
-    },
-    naming: {
-        race: 'Sioux'
-    }
-};
-//# sourceMappingURL=gnome.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/halfElf.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return halfElf; });
-
-var halfElf = {
-    name: 'Half-elf',
-    description: 'You are a half-breed, caught between the worlds of elves and men.',
-    abilityScores: {
-        strength: 0,
-        dexterity: 0,
-        constitution: 0,
-        intelligence: 0,
-        wisdom: 0,
-        charisma: 2
-    },
-    age: {
-        term: 10,
-        startingAge: 20,
-        agingStarts: 60,
-        advancedAging: 160
-    },
-    speed: 30,
-    features: [
-        { name: 'Half-Elf Versatility', text: 'Increase two ability scores, other than Charisma, by 1 each.' },
-        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
-        { name: 'Fey Ancestry', text: "You have advantage on saving throws against being charmed, and magic can't put you to sleep." }
-    ],
-    sizeFactors: {
-        category: 'medium',
-        description: 'Half-elves are about the same size as humans. Your size is medium.',
-        baseHeight: (4 * 12) + 9,
-        heightModifier: { count: 2, sides: 8 },
-        baseWeight: 110,
-        weightModifier: { count: 2, sides: 4 }
-    },
-    naming: {
-        race: 'Human'
-    }
-};
-//# sourceMappingURL=halfElf.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/halfOrc.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return halfOrc; });
-
-var halfOrc = {
-    name: 'Half-orc',
-    description: 'You are a half-breed, caught between the worlds of orcs and men.',
-    abilityScores: {
-        strength: 2,
-        dexterity: 0,
-        constitution: 1,
-        intelligence: 0,
-        wisdom: 0,
-        charisma: 0
-    },
-    age: {
-        term: 4,
-        startingAge: 14,
-        agingStarts: 30,
-        advancedAging: 60
-    },
-    speed: 30,
-    features: [
-        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
-        { name: 'Reletless Endurance', text: "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest." },
-        { name: 'Savage Attacks', text: "When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit." }
-    ],
-    sizeFactors: {
-        category: 'medium',
-        description: 'Half-orcs are somewhat larger and bulkier than humans, but your size is still medium.',
-        baseHeight: (4 * 12) + 10,
-        heightModifier: { count: 2, sides: 10 },
-        baseWeight: 140,
-        weightModifier: { count: 2, sides: 6 }
-    },
-    naming: {
-        race: 'Orcish'
-    }
-};
-//# sourceMappingURL=halfOrc.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/halfling.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return halfling; });
-var halfling = {
-    name: 'Halfling',
-    description: 'You are a small, practical and extraordinarily plucky humanoid.',
-    abilityScores: {
-        strength: 0,
-        dexterity: 2,
-        constitution: 0,
-        intelligence: 0,
-        wisdom: 0,
-        charisma: 1
-    },
-    age: {
-        term: 15,
-        startingAge: 20,
-        agingStarts: 80,
-        advancedAging: 230
-    },
-    speed: 25,
-    features: [
-        { name: 'Lucky', text: "When you roll a 1 on the d20 for an attack roll, ability check, or saving throw, you can reroll the die and must use the new roll." },
-        { name: 'Halfling Nimbleness', text: "You can move through the space of any creature that is of a size larger than yours." },
-        { name: 'Naturally Stealthy', text: "You can attempt to hide even when you are obscurred only by a creature that is at least one size larger than you." }
-    ],
-    sizeFactors: {
-        category: 'small',
-        description: 'Humble in stature, your size is small.',
-        baseHeight: (2 * 12) + 7,
-        heightModifier: { count: 2, sides: 4 },
-        baseWeight: 35,
-        weightModifier: { count: 1, sides: 1 }
-    },
-    naming: {
-        race: 'Halfling'
-    }
-};
-//# sourceMappingURL=halfling.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/human.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return human; });
-var human = {
-    name: 'Human',
-    description: 'You are a standard humanoid.',
-    abilityScores: {
-        strength: 1,
-        dexterity: 1,
-        constitution: 1,
-        intelligence: 1,
-        wisdom: 1,
-        charisma: 1
-    },
-    age: {
-        term: 4,
-        startingAge: 18,
-        agingStarts: 34,
-        advancedAging: 82
-    },
-    speed: 30,
-    features: [],
-    sizeFactors: {
-        category: 'medium',
-        description: 'Humans vary widely in height and build, from barely 5 feet to well over 6 feet tall. Regardless of your position in that range, your size is Medium.',
-        baseHeight: (4 * 12) + 8,
-        heightModifier: { count: 2, sides: 10 },
-        baseWeight: 110,
-        weightModifier: { count: 2, sides: 4 }
-    },
-    naming: {
-        race: 'Human'
-    }
-};
-//# sourceMappingURL=human.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/index.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dragonborn__ = __webpack_require__("../../../../../src/app/races/dragonborn.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_0__dragonborn__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__dwarf__ = __webpack_require__("../../../../../src/app/races/dwarf.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__dwarf__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__elf__ = __webpack_require__("../../../../../src/app/races/elf.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__elf__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gnome__ = __webpack_require__("../../../../../src/app/races/gnome.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_3__gnome__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__halfElf__ = __webpack_require__("../../../../../src/app/races/halfElf.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_4__halfElf__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__halfling__ = __webpack_require__("../../../../../src/app/races/halfling.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_5__halfling__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__halfOrc__ = __webpack_require__("../../../../../src/app/races/halfOrc.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_6__halfOrc__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__human__ = __webpack_require__("../../../../../src/app/races/human.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_7__human__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__tiefling__ = __webpack_require__("../../../../../src/app/races/tiefling.ts");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_8__tiefling__["a"]; });
-
-
-
-
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/races/tiefling.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race__ = __webpack_require__("../../../../../src/app/race.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return tiefling; });
-
-var tiefling = {
-    name: 'Tiefling',
-    description: 'You are the end result of generations of fiend blood mixing with humans.',
-    abilityScores: {
-        strength: 0,
-        dexterity: 0,
-        constitution: 0,
-        intelligence: 1,
-        wisdom: 0,
-        charisma: 2
-    },
-    age: {
-        term: 4,
-        startingAge: 18,
-        agingStarts: 34,
-        advancedAging: 82
-    },
-    speed: 30,
-    features: [
-        { name: 'Darkvision', text: __WEBPACK_IMPORTED_MODULE_0__race__["a" /* darkvision */] },
-        { name: 'Hellish Resistance', text: "You have resistance to fire damage." },
-        { name: 'Infernal Legacy', text: "You know the Thaumaturgy cantrip. When you reach 3rd level, you can cast the Hellish Rebuke spell as a 2nd level spell once with this trait and regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Darkness spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells." }
-    ],
-    sizeFactors: {
-        category: 'medium',
-        description: 'Tieflings are about the same size and build as humans. Your size is medium.',
-        baseHeight: (4 * 12) + 9,
-        heightModifier: { count: 2, sides: 8 },
-        baseWeight: 110,
-        weightModifier: { count: 2, sides: 4 }
-    },
-    naming: {
-        race: 'Fiendish',
-        sexAgnostic: true
-    }
-};
-//# sourceMappingURL=tiefling.js.map
+//# sourceMappingURL=skill.enum.js.map
 
 /***/ }),
 

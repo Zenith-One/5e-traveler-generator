@@ -42,7 +42,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n.loading {\n    display: inline-block;\n    width: 30px;\n    height: 30px;\n    background-image: url(" + __webpack_require__("../../../../../src/assets/Gear.gif") + ");\n    background-size: 30px 30px;\n}", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n.loading {\n    display: inline-block;\n    width: 30px;\n    height: 30px;\n    background-image: url(" + __webpack_require__("../../../../../src/assets/Gear.gif") + ");\n    background-size: 30px 30px;\n}\n\n.option-list {\n    border-right: 1px solid #999;\n}\n\n.option-list ul {\n    list-style:none;\n    padding-left:0;\n    text-indent: 0;\n}\n\n.option-list li {\n    padding: 4px 0;\n    cursor: pointer;\n}\n\n.option-list li:hover {\n    font-weight:bold;\n}\n\n.option-list li.selected {\n    font-weight: bold;\n}", ""]);
 
 // exports
 
