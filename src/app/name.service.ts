@@ -15,7 +15,7 @@ export class NameService {
     let url = urlTemplate.replace('#SETTINGS#',settings);
     return this.http.get(url, {responseType: 'text'}).toPromise()
       .then((resp)=>{
-        return resp.split('\n');
+        return resp.split('\n').map(item  => item.split(' ')[0]);
       });
   }
 

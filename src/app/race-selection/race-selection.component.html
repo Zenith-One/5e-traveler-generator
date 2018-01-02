@@ -21,8 +21,8 @@
     <p class="name-suggestions" *ngIf="nameSuggestions && nameSuggestions.length">
       <span *ngFor="let n of nameSuggestions" (click)="suggestedNameClick(n)">{{n}}</span>
     </p>
-    <p *ngIf="nameSuggestionsLoading">
-      <img src="./assets/Gear.gif" style="width: 50px;"/>
+    <p *ngIf="nameSuggestionsLoading" >
+      <span class="loading" style="margin:20px"></span>
     </p>
     <p>
       <button *ngIf="readyForSubmit()" (click)="finalizeRaceSelection()">I want to be a {{selectedRace.name}}! Onward!</button>
