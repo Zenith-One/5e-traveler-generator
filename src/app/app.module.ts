@@ -10,12 +10,16 @@ import { NameService } from './name.service';
 import { DiceService } from './dice.service';
 import { RaceSelectionComponent } from './race-selection/race-selection.component';
 import { AbilityScoreSelectionComponent } from './ability-score-selection/ability-score-selection.component';
+import { BackgroundSelectionComponent } from './background-selection/background-selection.component';
+import { NameSelectionComponent } from './name-selection/name-selection.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RaceSelectionComponent,
-    AbilityScoreSelectionComponent
+    AbilityScoreSelectionComponent,
+    BackgroundSelectionComponent,
+    NameSelectionComponent
   ],
   imports: [
     BrowserModule,

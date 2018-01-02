@@ -1,43 +1,50 @@
-<h2>Race Selection</h2>
-<div>
-  <p>
-    choose your race:
+<h2>Step 1: Select your race</h2>
 
-    <select [(ngModel)]="selected" (change)="selectedChanged()">
-      <option *ngFor="let r of races" [value]="r.name" [selected]="r.name === selected">{{r.name}}</option>
-    </select>
-  </p>
+<div class="row">
+  <div class="col-2 option-list">
+    <ul>
+      <li *ngFor="let r of races" (click)="selectRace(r)" [ngClass]="{'selected': selectedRace && selectedRace.name === r.name}">
+        {{r.name}}
+      </li>
+      <li *ngIf="selectedRace && !raceLocked" style="margin-top:20px;">
+        <button class="btn btn-primary" (click)="lockInRace()">Choose {{selectedRace.name}}</button>
+
+      </li>
+    </ul>
+  </div>
+  <div class="col-10">
+    <div *ngIf="selectedRace && !raceLocked">
+      <h3>{{selectedRace.name}}</h3>
+      <p>{{selectedRace.description}}</p>
+      <p><strong>Size: </strong>{{selectedRace.sizeFactors.description}} 
+        On average you will be around {{getHeightDisplay(getAverageSize())}} tall and 
+        weigh about {{getAverageSize().weight}} lbs.
+      </p>
+      <p><strong>Speed: </strong> Your base walking speed is {{selectedRace.speed}} ft.</p>
+      <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>
+      <div>
+        <p *ngFor="let f of selectedRace.features"><strong>{{f.name}}:</strong> {{f.text}}</p>
+      </div>
+    </div>
+  </div>
 </div>
-<div *ngIf="selected">
-  <h3>{{selectedRace.name}}</h3>
-  <p>
-    <strong>Sex: </strong> <select [(ngModel)]="sex" (change)="sexChanged()">
-      <option value="Male" [selected]="'Male' === sex">Male</option>
-      <option value="Female" [selected]="'Female' === sex">Female</option>
-    </select>
-  </p>
-  <div>
-    <p><strong>Name:</strong> <input type="text" [(ngModel)]="name"/> <button (click)="suggestNames(selectedRace, sex)" *ngIf="sex">Suggest</button></p>
-    <p class="name-suggestions" *ngIf="nameSuggestions && nameSuggestions.length">
-      <span *ngFor="let n of nameSuggestions" (click)="suggestedNameClick(n)">{{n}}</span>
-    </p>
-    <p *ngIf="nameSuggestionsLoading" >
-      <span class="loading" style="margin:20px"></span>
-    </p>
-    <p>
-      <button *ngIf="readyForSubmit()" (click)="finalizeRaceSelection()">I want to be a {{selectedRace.name}}! Onward!</button>
-    </p>
-  </div>
-  <h4>Racial Features</h4>
-  <p>{{selectedRace.description}}</p>
-  <p><strong>Size: </strong>{{selectedRace.sizeFactors.description}} 
-    On average you will be around {{getHeightDisplay(getAverageSize())}} tall and 
-    weigh about {{getAverageSize().weight}} lbs.
-  </p>
-  <p><strong>Speed: </strong> Your base walking speed is {{selectedRace.speed}} ft.</p>
-  <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>
-  <div>
-    <p *ngFor="let f of selectedRace.features"><strong>{{f.name}}:</strong> {{f.text}}</p>
-  </div>
 
-
+<!-->
+        <p>
+        <strong>Sex: </strong> <select [(ngModel)]="sex" (change)="sexChanged()">
+          <option value="Male" [selected]="'Male' === sex">Male</option>
+          <option value="Female" [selected]="'Female' === sex">Female</option>
+        </select>
+      </p>
+      <div>
+        <p><strong>Name:</strong> <input type="text" [(ngModel)]="name"/> <button (click)="suggestNames(selectedRace, sex)" *ngIf="sex">Suggest</button></p>
+        <p class="name-suggestions" *ngIf="nameSuggestions && nameSuggestions.length">
+          <span *ngFor="let n of nameSuggestions" (click)="suggestedNameClick(n)">{{n}}</span>
+        </p>
+        <p *ngIf="nameSuggestionsLoading" >
+          <span class="loading" style="margin:20px"></span>
+        </p>
+        <p>
+                  </p>
+      </div>
+<-->

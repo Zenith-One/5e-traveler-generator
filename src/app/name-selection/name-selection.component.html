@@ -1,0 +1,57 @@
+<h2>Step 2: Choose your name</h2>
+
+<div class="row">
+  <div class="col-2 option-list">
+    <ul>
+      <li [ngClass]="{'selected': sex === 'Male'}" (click)="selectSex('Male')">Male</li>
+      <li [ngClass]="{'selected': sex === 'Female'}" (click)="selectSex('Female')">Female</li>
+      <li *ngIf="sex && name && name.length>0" style="margin-top:20px;">
+        <button class="btn btn-primary" (click)="lockInName()">Continue</button>
+
+      </li>
+    </ul>
+  </div>
+  <div class="col-10">
+    <div *ngIf="!sex">
+      <h4>&lt;- Choose your gender.</h4>
+    </div>
+    <div *ngIf="sex">
+      <div class="form-group">
+        <label for="name"><h4>Name your {{sex.toLowerCase()}} {{character.race.name.toLowerCase()}}.</h4></label>
+        <input type="text" class="form-control" id="name" 
+                      aria-describedby="nameHelp" placeholder="Enter your character's name" [ngModel]="name">
+        <small id="nameHelp" class="form-text text-muted">Names are important. Choose carefully.</small>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div>
+            <h5 class="card-title">Name suggestions:</h5>
+            <div *ngIf="nameSuggestionsLoading">
+              <p style="text-align:center;">
+                <span class="loading" ></span>
+              </p>
+              <p style="text-align:center;">
+                Loading...
+              </p>
+            </div>
+            <div *ngIf="nameSuggestions && nameSuggestions.length">
+              <ul class="name-suggestions">
+                <li *ngFor="let n of nameSuggestions" (click)="selectName(n)">{{n}}</li>
+              </ul>
+              <p style="text-align:center;">
+                <button class="btn btn-secondary" (click)="suggestNames()">Refresh</button>
+              </p>
+            </div>
+            <p>
+              <small>
+                Name suggestions powered by <a href="https://donjon.bin.sh/fantasy/name/" target="_blank">donjon</a>
+              </small>
+            </p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

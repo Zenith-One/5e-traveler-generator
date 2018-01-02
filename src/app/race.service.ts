@@ -2,22 +2,11 @@ import { Injectable } from '@angular/core';
 import { RollExpression, DiceService } from './dice.service';
 import { Race, Size, darkvision } from './race';
 
-import * as races from './races/index';
+import {races}  from './data/races/index';
 
 @Injectable()
 export class RaceService {
-  static races: Race[] = [
-    races.dwarf,
-    races.elf,
-    races.halfling,
-    races.human,
-    races.dragonborn,
-    races.gnome,
-    races.halfElf,
-    races.halfOrc,
-    races.tiefling
-
-  ];
+  static races: Race[] = races;
 
   constructor() { }
 

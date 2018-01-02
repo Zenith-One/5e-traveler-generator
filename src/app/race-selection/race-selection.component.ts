@@ -15,25 +15,19 @@ export class RaceSelectionComponent  {
 
   name: string;
   sex: 'Male' | 'Female';
-  nameSuggestions: string[];
-  nameSuggestionsLoading: boolean = false;
   selected: string;
   selectedRace: Race;
   races = RaceService.races;
+  raceLocked: boolean = false;
 
   constructor(private raceService: RaceService, private nameService: NameService){}
 
-  selectedChanged(){
-    this.selectedRace = this.races.filter((r) => r.name === this.selected)[0];
-    this.nameSuggestions = undefined;
+  selectRace(r:Race){
+    this.selectedRace = r;
   }
 
-  sexChanged(){
-    this.nameSuggestions = undefined;
-  }
-
-  suggestedNameClick(name: string){
-    this.name = name;
+  lockInRace(){
+    this.finalizeRaceSelection();
   }
 
   getAverageSize(){
@@ -42,24 +36,6 @@ export class RaceSelectionComponent  {
 
   getHeightDisplay(s: Size){
     return RaceService.getHeightDisplay(s);
-  }
-
-  suggestNames(race: Race, sex: 'Male' | 'Female'){
-    this.nameSuggestionsLoading = true;
-    this.nameSuggestions = [];
-    let namesPromise;
-    if(race.naming.sexAgnostic){
-      namesPromise = this.nameService.getNames(race.naming.race);
-    } else {
-      namesPromise = this.nameService.getNames(race.naming.race, sex);
-    }
-    namesPromise.then((names)=>{
-      this.nameSuggestionsLoading = false;
-      this.nameSuggestions = names;
-    }).catch((arg1, arg2, arg3)=>{
-      this.nameSuggestionsLoading = false;
-      console.log('something went wrong...',arg1, arg2, arg3);
-    });
   }
 
   getSelectedRaceAbilityScoreMods(){
@@ -71,12 +47,8 @@ export class RaceSelectionComponent  {
     }).join(', ');
   }
 
-  readyForSubmit(){
-    return this.selectedRace && this.sex && this.name;
-  }
-
   finalizeRaceSelection(){
-    this.onComplete.emit(new Character(this.selectedRace, this.name, this.sex));
+    this.onComplete.emit(new Character(this.selectedRace));
   }
 
 }

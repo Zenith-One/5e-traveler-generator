@@ -6,3 +6,26 @@
     background-image: url('./assets/Gear.gif');
     background-size: 30px 30px;
 }
+
+.option-list {
+    border-right: 1px solid #999;
+}
+
+.option-list ul {
+    list-style:none;
+    padding-left:0;
+    text-indent: 0;
+}
+
+.option-list li {
+    padding: 4px 0;
+    cursor: pointer;
+}
+
+.option-list li:hover {
+    font-weight:bold;
+}
+
+.option-list li.selected {
+    font-weight: bold;
+}

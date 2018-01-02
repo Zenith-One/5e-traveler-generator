@@ -1,4 +1,4 @@
-import { Race, darkvision } from '../race';
+import { Race, darkvision } from '../../race';
 
 export const tiefling:Race = {
       name: 'Tiefling',

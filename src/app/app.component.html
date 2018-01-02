@@ -1,11 +1,11 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
+  <h1>Traveler-Style 5e Character Generator</h1>
 </div>
 <div>
    <race-selection (onComplete)="handleRaceSelection($event)" *ngIf="step==1"></race-selection>
-   <ability-score-selection (onComplete)="handleAbilitySelection()" [character]="character" *ngIf="step==2"></ability-score-selection>
+   <name-selection (onComplete)="handleNameSelection()" [character]="character" *ngIf="step==2"></name-selection>
+   <ability-score-selection (onComplete)="handleAbilitySelection()" [character]="character" *ngIf="step==3"></ability-score-selection>
+   <background-selection (onComplete)="handleBackgroundSelection()" [character]="character" *ngIf="step==4"></background-selection>
 </div>
 <footer style="margin-bottom:60px;"></footer>
