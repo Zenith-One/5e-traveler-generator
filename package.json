@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod --base-ref /5e-traveler-generator/",
+    "build": "ng build --env=prod --base-href /5e-traveler-generator/",
     "publish": "gh-pages -d dist",
     "test": "ng test",
     "lint": "ng lint",
