@@ -19,5 +19,6 @@ export class AppComponent {
 
   handleAbilitySelection(){
     console.log(this.character);
+    this.step++;
   }
 }
