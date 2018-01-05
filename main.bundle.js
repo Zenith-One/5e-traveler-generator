@@ -34,7 +34,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/ability-score-selection/ability-score-selection.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Ability Score Selection</h2>\n<p>\n  Select your ability scores:\n</p>\n<table class=\"table\">\n  <tr>\n    <th>Ability</th>\n    <th>Base</th>\n    <th>Racial</th>\n    <th>Total</th>\n    <th>Bonus</th>\n  </tr>\n  <tr *ngFor=\"let ability of abilityScoreNames\">\n    <td>{{ability.substr(0,1).toUpperCase() + ability.substr(1)}}</td>\n    <td>\n      <select [(ngModel)]=\"selectedScores[ability]\" (change)=\"selectedScoreChanged(ability)\">\n        <option [value]=\"0\"></option>\n        <option [value]=\"selectedScores[ability]\" *ngIf=\"selectedScores[ability] && selectedScores[ability] !== 'undefined'\">{{selectedScores[ability]}}</option>\n        <option *ngFor=\"let score of filterAvailableScores()\" [value]=\"score\" [selected]=\"score === selectedScores[ability]\">{{score}}</option>\n      </select>\n    </td>\n    <td>{{character.race.abilityScores[ability]}}</td>\n    <td>{{character.race.abilityScores[ability] + selectedScores[ability]}}</td>\n    <td>{{getAbilityBonus(character.race.abilityScores[ability] + selectedScores[ability])}}</td>\n  </tr>\n</table>\n<button *ngIf=\"areAllAbilitiesSelected()\" (click)=\"submitAbilityScores()\">Lock 'em in! Let's go!</button>\n"
+module.exports = "<h2>Step 3: Choose your ability scores for {{character.name}}</h2>\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li *ngIf=\"areAllAbilitiesSelected()\">\n        <button class=\"btn btn-primary\" (click)=\"submitAbilityScores()\">Continue</button>\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <table class=\"table\">\n      <tr>\n        <th>Ability</th>\n        <th>Base</th>\n        <th>Racial</th>\n        <th>Total</th>\n        <th>Bonus</th>\n      </tr>\n      <tr *ngFor=\"let ability of abilityScoreNames\">\n        <td>{{ability.substr(0,1).toUpperCase() + ability.substr(1)}}</td>\n        <td>\n          <select [(ngModel)]=\"selectedScores[ability]\" (change)=\"selectedScoreChanged(ability)\">\n            <option [value]=\"0\"></option>\n            <option [value]=\"selectedScores[ability]\" *ngIf=\"selectedScores[ability] && selectedScores[ability] !== 'undefined'\">{{selectedScores[ability]}}</option>\n            <option *ngFor=\"let score of filterAvailableScores()\" [value]=\"score\" [selected]=\"score === selectedScores[ability]\">{{score}}</option>\n          </select>\n        </td>\n        <td>{{character.race.abilityScores[ability]}}</td>\n        <td>{{character.race.abilityScores[ability] + selectedScores[ability]}}</td>\n        <td>{{getAbilityBonus(character.race.abilityScores[ability] + selectedScores[ability])}}</td>\n      </tr>\n    </table>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -167,7 +167,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>Traveler-Style 5e Character Generator</h1>\n</div>\n<div>\n   <race-selection (onComplete)=\"handleRaceSelection($event)\" *ngIf=\"step==1\"></race-selection>\n   <name-selection (onComplete)=\"handleNameSelection()\" [character]=\"character\" *ngIf=\"step==2\"></name-selection>\n   <ability-score-selection (onComplete)=\"handleAbilitySelection()\" [character]=\"character\" *ngIf=\"step==3\"></ability-score-selection>\n   <background-selection (onComplete)=\"handleBackgroundSelection()\" [character]=\"character\" *ngIf=\"step==4\"></background-selection>\n</div>\n<footer style=\"margin-bottom:60px;\"></footer>\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>Traveler-Style 5e Character Generator</h1>\n</div>\n<div *ngIf=\"!isExporting && !isImporting\">\n   <race-selection (onComplete)=\"handleRaceSelection($event)\" *ngIf=\"step==1\"></race-selection>\n   <name-selection (onComplete)=\"handleNameSelection()\" [character]=\"character\" *ngIf=\"step==2\"></name-selection>\n   <ability-score-selection (onComplete)=\"handleAbilitySelection()\" [character]=\"character\" *ngIf=\"step==3\"></ability-score-selection>\n   <background-selection (onComplete)=\"handleBackgroundSelection()\" [character]=\"character\" *ngIf=\"step==4\"></background-selection>\n   <career-minigame [character]=\"character\" *ngIf=\"step==5\"></career-minigame>\n</div>\n<div *ngIf=\"isExporting\">\n  <div class=\"card\">\n    <div class=\"card-body\">\n      <textarea style=\"height:250px;overflow:hidden;\" class=\"form-control\" [value]=\"getExportedCharacter()\"></textarea>\n    </div>\n  </div>\n</div>\n<div *ngIf=\"isImporting\">\n  <div class=\"card\">\n    <div class=\"card-body\">\n      <div class=\"alert alert-warning\" *ngIf=\"importError\">{{importError}}</div>\n      <textarea style=\"height:250px;overflow:hidden;\" class=\"form-control\" (change)=\"clearImportError()\" [(ngModel)]=\"importString\" placeholder=\"Paste import string here.\"></textarea>\n      <button class=\"btn btn-primary\" (click)=\"doImport()\">Import it!</button>\n\n    </div>\n  </div>\n</div>\n<footer style=\"margin:60px;\">\n  <button class=\"btn btn-success\" *ngIf=\"step === 1\" (click)=\"showImport()\">Import</button>\n  <button class=\"btn btn-danger\" *ngIf=\"isImporting\" (click)=\"hideImport()\">Close Import</button>\n  <button class=\"btn btn-warning\" *ngIf=\"step > 1\" (click)=\"showExport()\">Export</button>\n  <button class=\"btn btn-danger\" *ngIf=\"isExporting\" (click)=\"hideExport()\">Close Export</button>\n</footer>\n"
 
 /***/ }),
 
@@ -189,36 +189,83 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var devStep = 0;
+var devStep = 5;
 var devData = [
-    '{"race":{"name":"Dwarf","description":"You are a short, stout and extremely hardy humanoid. Many dwarves make their homes in the earth and under mountains.","abilityScores":{"strength":0,"dexterity":0,"constitution":2,"intelligence":0,"wisdom":1,"charisma":0},"age":{"term":20,"startingAge":50,"agingStarts":110,"advancedAging":310},"speed":25,"features":[{"name":"Darkvision","text":"You have darkvision (You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t dicern color in darkness, only shades of gray)."},{"name":"Dwarven Resilience","text":"You have advantage on saving throws against poison, and you have resistance to poison damage."},{"name":"Dwarven Toughness","text":"Your hit point maximum increases by 1, and it increases by 1 every time you gain a level."},{"name":"Stout","text":"Your speed is not reduced by wearing heavy armor."}],"sizeFactors":{"category":"medium","description":"Squat and stocky, your size is medium.","baseHeight":44,"heightModifier":{"count":2,"sides":4},"baseWeight":115,"weightModifier":{"count":2,"sides":6},"averageHeight":49},"naming":{"race":"Dwarvish"}},"name":"as","sex":"Male","size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":47,"weight":127},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[]}',
-    '{"race":{"name":"Dwarf","description":"You are a short, stout and extremely hardy humanoid. Many dwarves make their homes in the earth and under mountains.","abilityScores":{"strength":0,"dexterity":0,"constitution":2,"intelligence":0,"wisdom":1,"charisma":0},"age":{"term":20,"startingAge":50,"agingStarts":110,"advancedAging":310},"speed":25,"features":[{"name":"Darkvision","text":"You have darkvision (You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t dicern color in darkness, only shades of gray)."},{"name":"Dwarven Resilience","text":"You have advantage on saving throws against poison, and you have resistance to poison damage."},{"name":"Dwarven Toughness","text":"Your hit point maximum increases by 1, and it increases by 1 every time you gain a level."},{"name":"Stout","text":"Your speed is not reduced by wearing heavy armor."}],"sizeFactors":{"category":"medium","description":"Squat and stocky, your size is medium.","baseHeight":44,"heightModifier":{"count":2,"sides":4},"baseWeight":115,"weightModifier":{"count":2,"sides":6},"averageHeight":49},"naming":{"race":"Dwarvish"}},"name":"as","sex":"Male","size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":47,"weight":127},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[]}',
+    '{"step":2,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[],"age":50}',
+    '{"step":3,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male"}',
+    '{"step":4,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male"}',
+    '{"step":5,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male","background":"Nobility"}'
 ];
 var AppComponent = (function () {
     function AppComponent() {
         this.title = 'app';
         this.step = 1;
+        this.isExporting = false;
+        this.isImporting = false;
         if (devStep) {
-            __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */].parse(devData[devStep - 2]);
-            this.character = JSON.parse(devData[devStep - 2]);
+            var c = __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */].deserialize(devData[Math.max(devStep - 2, 0)]);
+            this.character = c;
+            console.log(c);
             this.step = devStep;
         }
     }
     AppComponent.prototype.handleRaceSelection = function (character) {
         this.character = character;
         this.step++;
+        character.step = this.step;
         if (devStep)
             this.logCharacter();
     };
     AppComponent.prototype.handleNameSelection = function () {
         this.step++;
+        this.character.step = this.step;
         if (devStep)
             this.logCharacter();
     };
     AppComponent.prototype.handleAbilitySelection = function () {
         this.step++;
+        this.character.step = this.step;
         if (devStep)
             this.logCharacter();
+    };
+    AppComponent.prototype.handleBackgroundSelection = function () {
+        this.step++;
+        this.character.step = this.step;
+        if (devStep)
+            this.logCharacter();
+    };
+    AppComponent.prototype.getExportedCharacter = function () {
+        return this.character.serialize();
+    };
+    AppComponent.prototype.showExport = function () {
+        this.isExporting = true;
+    };
+    AppComponent.prototype.hideExport = function () {
+        this.isExporting = false;
+    };
+    AppComponent.prototype.showImport = function () {
+        this.isImporting = true;
+    };
+    AppComponent.prototype.hideImport = function () {
+        this.isImporting = false;
+    };
+    AppComponent.prototype.doImport = function () {
+        var c;
+        try {
+            c = __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */].deserialize(this.importString);
+        }
+        catch (e) {
+            this.importError = 'Invalid import string.';
+            return;
+        }
+        if (c) {
+            this.character = c;
+            this.step = c.step;
+            this.isImporting = false;
+        }
+    };
+    AppComponent.prototype.clearImportError = function () {
+        this.importError = undefined;
     };
     AppComponent.prototype.logCharacter = function () {
         console.log(this.character);
@@ -254,6 +301,11 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ability_score_selection_ability_score_selection_component__ = __webpack_require__("../../../../../src/app/ability-score-selection/ability-score-selection.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__background_selection_background_selection_component__ = __webpack_require__("../../../../../src/app/background-selection/background-selection.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__name_selection_name_selection_component__ = __webpack_require__("../../../../../src/app/name-selection/name-selection.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__career_minigame_career_minigame_component__ = __webpack_require__("../../../../../src/app/career-minigame/career-minigame.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__character_stats_character_stats_component__ = __webpack_require__("../../../../../src/app/character-stats/character-stats.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__character_stats_core_details_core_details_component__ = __webpack_require__("../../../../../src/app/character-stats/core-details/core-details.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__background_details_background_details_component__ = __webpack_require__("../../../../../src/app/background-details/background-details.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__race_details_race_details_component__ = __webpack_require__("../../../../../src/app/race-details/race-details.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -261,6 +313,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
+
+
 
 
 
@@ -285,7 +342,12 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_8__race_selection_race_selection_component__["a" /* RaceSelectionComponent */],
             __WEBPACK_IMPORTED_MODULE_9__ability_score_selection_ability_score_selection_component__["a" /* AbilityScoreSelectionComponent */],
             __WEBPACK_IMPORTED_MODULE_10__background_selection_background_selection_component__["a" /* BackgroundSelectionComponent */],
-            __WEBPACK_IMPORTED_MODULE_11__name_selection_name_selection_component__["a" /* NameSelectionComponent */]
+            __WEBPACK_IMPORTED_MODULE_11__name_selection_name_selection_component__["a" /* NameSelectionComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__career_minigame_career_minigame_component__["a" /* CareerMinigameComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__character_stats_character_stats_component__["a" /* CharacterStatsComponent */],
+            __WEBPACK_IMPORTED_MODULE_14__character_stats_core_details_core_details_component__["a" /* CoreDetailsComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__background_details_background_details_component__["a" /* BackgroundDetailsComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__race_details_race_details_component__["a" /* RaceDetailsComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -299,6 +361,82 @@ AppModule = __decorate([
 ], AppModule);
 
 //# sourceMappingURL=app.module.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/background-details/background-details.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/background-details/background-details.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n  <h3>{{background.name}}</h3>\n  <p>{{background.description}}</p>\n  <p *ngFor=\"let f of background.features\">\n    <strong>{{f.name}}:</strong> {{f.text}}\n  </p>\n  <p>\n    <strong>Languages:</strong> You can speak, read and write {{getLanguageDisplay()}}\n  </p>\n</div>\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/background-details/background-details.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__background__ = __webpack_require__("../../../../../src/app/background.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__background___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__background__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BackgroundDetailsComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var BackgroundDetailsComponent = (function () {
+    function BackgroundDetailsComponent() {
+    }
+    BackgroundDetailsComponent.prototype.getLanguageDisplay = function () {
+        var lang = this.background.languages.slice();
+        if (lang.length < 2) {
+            return lang[0] + '.';
+        }
+        var lastTwo = lang.splice(lang.length - 2, 2).join(' and ');
+        lang.push(lastTwo);
+        return lang.join(', ') + '.';
+    };
+    return BackgroundDetailsComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__background__["Background"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__background__["Background"]) === "function" && _a || Object)
+], BackgroundDetailsComponent.prototype, "background", void 0);
+BackgroundDetailsComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
+        selector: 'background-details',
+        template: __webpack_require__("../../../../../src/app/background-details/background-details.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/background-details/background-details.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], BackgroundDetailsComponent);
+
+var _a;
+//# sourceMappingURL=background-details.component.js.map
 
 /***/ }),
 
@@ -323,7 +461,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/background-selection/background-selection.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Background Selection for {{character.name}}</h2>\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li *ngFor=\"let b of backgrounds\" (click)=\"selectBackground(b)\" [ngClass]=\"{'selected': selectedBackground && selectedBackground.name === b.name}\">\n        {{b.name}}\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <div *ngIf=\"selectedBackground\">\n      <h3>{{selectedBackground.name}}</h3>\n      <p>{{selectedBackground.description}}</p>\n      <p *ngFor=\"let f of selectedBackground.features\">\n        <strong>{{f.name}}:</strong> {{f.text}}\n      </p>\n      <p>\n        <strong>Languages:</strong> You can speak, read and write {{getBackgroundLanguageDisplay()}}\n      </p>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<h2>Step 4: Background Selection for {{character.name}}</h2>\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li *ngFor=\"let b of backgrounds\" (click)=\"selectBackground(b)\" [ngClass]=\"{'selected': selectedBackground && selectedBackground.name === b.name}\">\n        {{b.name}}\n      </li>\n      <li *ngIf=\"selectedBackground\">\n        <button class=\"btn btn-primary\" (click)=\"finalizeBackground()\">Continue</button>\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <background-details [background]=\"selectedBackground\" *ngIf=\"selectedBackground\"></background-details>\n\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -351,18 +489,14 @@ var BackgroundSelectionComponent = (function () {
     function BackgroundSelectionComponent() {
         this.onComplete = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]();
         this.backgrounds = __WEBPACK_IMPORTED_MODULE_1__data_backgrounds_index__["a" /* backgrounds */];
+        this.selectedBackground = __WEBPACK_IMPORTED_MODULE_1__data_backgrounds_index__["a" /* backgrounds */][0];
     }
-    BackgroundSelectionComponent.prototype.getBackgroundLanguageDisplay = function () {
-        var lang = this.selectedBackground.languages.slice();
-        if (lang.length < 2) {
-            return lang[0] + '.';
-        }
-        var lastTwo = lang.splice(lang.length - 2, 2).join(' and ');
-        lang.push(lastTwo);
-        return lang.join(', ') + '.';
-    };
     BackgroundSelectionComponent.prototype.selectBackground = function (b) {
         this.selectedBackground = b;
+    };
+    BackgroundSelectionComponent.prototype.finalizeBackground = function () {
+        this.character.setBackground(this.selectedBackground);
+        this.onComplete.emit(true);
     };
     return BackgroundSelectionComponent;
 }());
@@ -388,16 +522,249 @@ var _a, _b;
 
 /***/ }),
 
+/***/ "../../../../../src/app/background.ts":
+/***/ (function(module, exports) {
+
+//# sourceMappingURL=background.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/career-minigame/career-minigame.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".nav-tabs .nav-item .nav-link {\r\n    cursor: pointer;\r\n}\r\n\r\nul.nav-tabs {\r\n    margin-bottom: 20px;\r\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/career-minigame/career-minigame.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2>Character Development</h2>\n<ul class=\"nav nav-tabs\">\n    <li class=\"nav-item\">\n        <a class=\"nav-link\" [ngClass]=\"{'active': tab==='develop'}\">Develop Your Character</a>\n    </li>\n    <li class=\"nav-item\">\n        <a class=\"nav-link\" [ngClass]=\"{'active': tab==='stats'}\">Character Details</a>\n    </li>\n</ul>\n<character-stats [character]=\"character\" *ngIf=\"tab==='stats'\"></character-stats>\n\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/career-minigame/career-minigame.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__character__ = __webpack_require__("../../../../../src/app/character.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CareerMinigameComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var CareerMinigameComponent = (function () {
+    function CareerMinigameComponent() {
+        this.onComplete = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]();
+        this.phase = 0;
+        this.tab = 'stats';
+    }
+    return CareerMinigameComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */]) === "function" && _a || Object)
+], CareerMinigameComponent.prototype, "character", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["K" /* Output */])(),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]) === "function" && _b || Object)
+], CareerMinigameComponent.prototype, "onComplete", void 0);
+CareerMinigameComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
+        selector: 'career-minigame',
+        template: __webpack_require__("../../../../../src/app/career-minigame/career-minigame.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/career-minigame/career-minigame.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], CareerMinigameComponent);
+
+var _a, _b;
+//# sourceMappingURL=career-minigame.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/character-stats/character-stats.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/character-stats/character-stats.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h3 class=\"text-center\">{{character.name}}, the {{character.sex.toLowerCase()}} {{character.race.name}}</h3>\r\n\r\n<div class=\"row\">\r\n    <div class=\"col-2 option-list\">\r\n        <ul>\r\n            <li [ngClass]=\"{'selected': category === 'core'}\" (click)=\"selectCategory('core')\">Core Details</li>\r\n            <li [ngClass]=\"{'selected': category === 'race'}\" (click)=\"selectCategory('race')\">Race</li>\r\n            <li [ngClass]=\"{'selected': category === 'background'}\" (click)=\"selectCategory('background')\">Background</li>\r\n        </ul>\r\n    </div>\r\n    <div class=\"col-10\">\r\n        <core-details [character]=\"character\" *ngIf=\"category==='core'\"></core-details>\r\n        <race-details [race]=\"character.race\" *ngIf=\"category==='race'\"></race-details>\r\n        <background-details [background]=\"character.background\" *ngIf=\"category==='background'\"></background-details>\r\n    </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/character-stats/character-stats.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__character__ = __webpack_require__("../../../../../src/app/character.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CharacterStatsComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var CharacterStatsComponent = (function () {
+    function CharacterStatsComponent() {
+        this.category = 'core';
+    }
+    CharacterStatsComponent.prototype.selectCategory = function (selected) {
+        this.category = selected;
+    };
+    return CharacterStatsComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */]) === "function" && _a || Object)
+], CharacterStatsComponent.prototype, "character", void 0);
+CharacterStatsComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
+        selector: 'character-stats',
+        template: __webpack_require__("../../../../../src/app/character-stats/character-stats.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/character-stats/character-stats.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], CharacterStatsComponent);
+
+var _a;
+//# sourceMappingURL=character-stats.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/character-stats/core-details/core-details.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "ul.ability-scores {\r\n    list-style: none;\r\n    text-transform: capitalize\r\n}\r\n\r\nul.ability-scores strong {\r\n    display: inline-block;\r\n    width: 7em;\r\n}\r\n\r\nspan.score {\r\n    display: inline-block;\r\n    width: 2em;\r\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/character-stats/core-details/core-details.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h4>Ability Scores</h4>\r\n<ul class=\"ability-scores row\">\r\n    <li class=\"col-4\" \r\n        *ngFor=\"let ability of ['strength','dexterity','constitution','intelligence','wisdom','charisma']\">\r\n        <strong>{{ability}}: </strong> <span class=\"score\">{{getAbilityScoreDisplay(ability)[0]}}</span> ({{getAbilityScoreDisplay(ability)[1]}})\r\n    </li>\r\n</ul>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/character-stats/core-details/core-details.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__character__ = __webpack_require__("../../../../../src/app/character.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CoreDetailsComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var CoreDetailsComponent = (function () {
+    function CoreDetailsComponent() {
+    }
+    CoreDetailsComponent.prototype.getAbilityScoreDisplay = function (ability) {
+        return [this.character.abilityScores[ability] + '', this.getAbilityBonus(ability)];
+    };
+    CoreDetailsComponent.prototype.getAbilityBonus = function (ability) {
+        var mod = __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */].getAbilityModifier(this.character.abilityScores[ability]);
+        var out;
+        if (mod >= 0) {
+            out = '+' + mod;
+        }
+        else {
+            out = '' + mod;
+        }
+        return out;
+    };
+    return CoreDetailsComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__character__["a" /* Character */]) === "function" && _a || Object)
+], CoreDetailsComponent.prototype, "character", void 0);
+CoreDetailsComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
+        selector: 'core-details',
+        template: __webpack_require__("../../../../../src/app/character-stats/core-details/core-details.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/character-stats/core-details/core-details.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], CoreDetailsComponent);
+
+var _a;
+//# sourceMappingURL=core-details.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/character.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race_service__ = __webpack_require__("../../../../../src/app/race.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__data_backgrounds_index__ = __webpack_require__("../../../../../src/app/data/backgrounds/index.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Character; });
+
 
 var Character = (function () {
     function Character(race) {
         this.race = race;
+        this.connections = [];
         this.size = __WEBPACK_IMPORTED_MODULE_0__race_service__["a" /* RaceService */].getSize(this.race);
         this.abilityScores = {
             strength: 0,
@@ -409,6 +776,7 @@ var Character = (function () {
         };
         this.skills = [];
         this.events = [];
+        this.age = race.age.startingAge;
     }
     Character.prototype.setSex = function (sex) {
         this.sex = sex;
@@ -444,6 +812,36 @@ var Character = (function () {
         c.background = cdata.background;
         c.size = cdata.size;
         c.skills = cdata.skills;
+        c.age = cdata.age;
+        c.connections = cdata.connections;
+        c.workHistory = cdata.workHistory;
+        console.log(c);
+        return c;
+    };
+    Character.prototype.serialize = function () {
+        var raw = JSON.parse(JSON.stringify(this));
+        raw.race = this.race.name;
+        if (this.background && this.background.name) {
+            raw.background = this.background.name;
+        }
+        return JSON.stringify(raw);
+    };
+    Character.deserialize = function (str) {
+        var raw = JSON.parse(str);
+        var race = __WEBPACK_IMPORTED_MODULE_0__race_service__["a" /* RaceService */].races.filter(function (item) { return item.name === raw.race; })[0];
+        var background = __WEBPACK_IMPORTED_MODULE_1__data_backgrounds_index__["a" /* backgrounds */].filter(function (item) { return item.name === raw.background; })[0];
+        var c = new Character(race);
+        c.step = raw.step;
+        c.setName(raw.name);
+        c.setSex(raw.sex);
+        c.abilityScores = raw.abilityScores;
+        c.background = background;
+        c.size = raw.size;
+        c.skills = raw.skills;
+        c.age = raw.age;
+        c.connections = raw.connections;
+        c.workHistory = raw.workHistory;
+        console.log(c);
         return c;
     };
     return Character;
@@ -1313,6 +1711,88 @@ var _a;
 
 /***/ }),
 
+/***/ "../../../../../src/app/race-details/race-details.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/race-details/race-details.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n  <h3>{{race.name}}</h3>\n  <p>{{race.description}}</p>\n  <p><strong>Size: </strong>{{race.sizeFactors.description}} \n    On average you will be around {{getHeightDisplay(getAverageSize())}} tall and \n    weigh about {{getAverageSize().weight}} lbs.\n  </p>\n  <p><strong>Speed: </strong> Your base walking speed is {{race.speed}} ft.</p>\n  <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>\n  <div>\n    <p *ngFor=\"let f of race.features\"><strong>{{f.name}}:</strong> {{f.text}}</p>\n  </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/race-details/race-details.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__race__ = __webpack_require__("../../../../../src/app/race.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__race_service__ = __webpack_require__("../../../../../src/app/race.service.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RaceDetailsComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var RaceDetailsComponent = (function () {
+    function RaceDetailsComponent() {
+    }
+    RaceDetailsComponent.prototype.getAverageSize = function () {
+        return __WEBPACK_IMPORTED_MODULE_2__race_service__["a" /* RaceService */].getAverageSize(this.race);
+    };
+    RaceDetailsComponent.prototype.getHeightDisplay = function (s) {
+        return __WEBPACK_IMPORTED_MODULE_2__race_service__["a" /* RaceService */].getHeightDisplay(s);
+    };
+    RaceDetailsComponent.prototype.getSelectedRaceAbilityScoreMods = function () {
+        var mods = __WEBPACK_IMPORTED_MODULE_2__race_service__["a" /* RaceService */].getAbilityModifiers(this.race);
+        return mods.map(function (item) {
+            var name = item.name.substr(0, 1).toUpperCase() + item.name.substr(1);
+            var value = item.value > 0 ? '+' + item.value : item.value;
+            return name + ' ' + value;
+        }).join(', ');
+    };
+    return RaceDetailsComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__race__["Race"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__race__["Race"]) === "function" && _a || Object)
+], RaceDetailsComponent.prototype, "race", void 0);
+RaceDetailsComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
+        selector: 'race-details',
+        template: __webpack_require__("../../../../../src/app/race-details/race-details.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/race-details/race-details.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], RaceDetailsComponent);
+
+var _a;
+//# sourceMappingURL=race-details.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/race-selection/race-selection.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1334,7 +1814,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/race-selection/race-selection.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Step 1: Select your race</h2>\n\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li *ngFor=\"let r of races\" (click)=\"selectRace(r)\" [ngClass]=\"{'selected': selectedRace && selectedRace.name === r.name}\">\n        {{r.name}}\n      </li>\n      <li *ngIf=\"selectedRace && !raceLocked\" style=\"margin-top:20px;\">\n        <button class=\"btn btn-primary\" (click)=\"lockInRace()\">Choose {{selectedRace.name}}</button>\n\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <div *ngIf=\"selectedRace && !raceLocked\">\n      <h3>{{selectedRace.name}}</h3>\n      <p>{{selectedRace.description}}</p>\n      <p><strong>Size: </strong>{{selectedRace.sizeFactors.description}} \n        On average you will be around {{getHeightDisplay(getAverageSize())}} tall and \n        weigh about {{getAverageSize().weight}} lbs.\n      </p>\n      <p><strong>Speed: </strong> Your base walking speed is {{selectedRace.speed}} ft.</p>\n      <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>\n      <div>\n        <p *ngFor=\"let f of selectedRace.features\"><strong>{{f.name}}:</strong> {{f.text}}</p>\n      </div>\n    </div>\n  </div>\n</div>\n\n<!-->\n        <p>\n        <strong>Sex: </strong> <select [(ngModel)]=\"sex\" (change)=\"sexChanged()\">\n          <option value=\"Male\" [selected]=\"'Male' === sex\">Male</option>\n          <option value=\"Female\" [selected]=\"'Female' === sex\">Female</option>\n        </select>\n      </p>\n      <div>\n        <p><strong>Name:</strong> <input type=\"text\" [(ngModel)]=\"name\"/> <button (click)=\"suggestNames(selectedRace, sex)\" *ngIf=\"sex\">Suggest</button></p>\n        <p class=\"name-suggestions\" *ngIf=\"nameSuggestions && nameSuggestions.length\">\n          <span *ngFor=\"let n of nameSuggestions\" (click)=\"suggestedNameClick(n)\">{{n}}</span>\n        </p>\n        <p *ngIf=\"nameSuggestionsLoading\" >\n          <span class=\"loading\" style=\"margin:20px\"></span>\n        </p>\n        <p>\n                  </p>\n      </div>\n<-->"
+module.exports = "<h2>Step 1: Select your race</h2>\n\n<div class=\"row\">\n  <div class=\"col-2 option-list\">\n    <ul>\n      <li *ngFor=\"let r of races\" (click)=\"selectRace(r)\" [ngClass]=\"{'selected': selectedRace && selectedRace.name === r.name}\">\n        {{r.name}}\n      </li>\n      <li *ngIf=\"selectedRace && !raceLocked\" style=\"margin-top:20px;\">\n        <button class=\"btn btn-primary\" (click)=\"lockInRace()\">Choose {{selectedRace.name}}</button>\n\n      </li>\n    </ul>\n  </div>\n  <div class=\"col-10\">\n    <race-details [race]=\"selectedRace\"></race-details>\n  </div>\n</div>\n\n<!-->\n        <p>\n        <strong>Sex: </strong> <select [(ngModel)]=\"sex\" (change)=\"sexChanged()\">\n          <option value=\"Male\" [selected]=\"'Male' === sex\">Male</option>\n          <option value=\"Female\" [selected]=\"'Female' === sex\">Female</option>\n        </select>\n      </p>\n      <div>\n        <p><strong>Name:</strong> <input type=\"text\" [(ngModel)]=\"name\"/> <button (click)=\"suggestNames(selectedRace, sex)\" *ngIf=\"sex\">Suggest</button></p>\n        <p class=\"name-suggestions\" *ngIf=\"nameSuggestions && nameSuggestions.length\">\n          <span *ngFor=\"let n of nameSuggestions\" (click)=\"suggestedNameClick(n)\">{{n}}</span>\n        </p>\n        <p *ngIf=\"nameSuggestionsLoading\" >\n          <span class=\"loading\" style=\"margin:20px\"></span>\n        </p>\n        <p>\n                  </p>\n      </div>\n<-->"
 
 /***/ }),
 
@@ -1366,6 +1846,7 @@ var RaceSelectionComponent = (function () {
         this.nameService = nameService;
         this.onComplete = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* EventEmitter */]();
         this.races = __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].races;
+        this.selectedRace = this.races[0];
         this.raceLocked = false;
     }
     RaceSelectionComponent.prototype.selectRace = function (r) {
@@ -1373,20 +1854,6 @@ var RaceSelectionComponent = (function () {
     };
     RaceSelectionComponent.prototype.lockInRace = function () {
         this.finalizeRaceSelection();
-    };
-    RaceSelectionComponent.prototype.getAverageSize = function () {
-        return __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].getAverageSize(this.selectedRace);
-    };
-    RaceSelectionComponent.prototype.getHeightDisplay = function (s) {
-        return __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].getHeightDisplay(s);
-    };
-    RaceSelectionComponent.prototype.getSelectedRaceAbilityScoreMods = function () {
-        var mods = __WEBPACK_IMPORTED_MODULE_1__race_service__["a" /* RaceService */].getAbilityModifiers(this.selectedRace);
-        return mods.map(function (item) {
-            var name = item.name.substr(0, 1).toUpperCase() + item.name.substr(1);
-            var value = item.value > 0 ? '+' + item.value : item.value;
-            return name + ' ' + value;
-        }).join(', ');
     };
     RaceSelectionComponent.prototype.finalizeRaceSelection = function () {
         this.onComplete.emit(new __WEBPACK_IMPORTED_MODULE_3__character__["a" /* Character */](this.selectedRace));
