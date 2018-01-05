@@ -9,5 +9,12 @@ export const dwarvenCulture: Background = {
         {name: 'Stonecunning', text: 'Whenever you make an Intelligence (History) check related to the origin of stonework, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus.'}
     ],
     languages: ['Common','Dwarvish'],
-    skills: []
+    skills: [],
+    proficiencies: [
+        {category: 'weapon', name: 'battleaxe'},
+        {category: 'weapon', name: 'handaxe'},
+        {category: 'weapon', name: 'warhammer'},
+        {category: 'weapon', name: 'light hammer'},
+        {category: 'tool', name: "smith's tools, brewer's supplies, or mason's tools"}
+    ]
 }

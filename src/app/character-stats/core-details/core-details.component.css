@@ -12,3 +12,12 @@ span.score {
     display: inline-block;
     width: 2em;
 }
+
+span.heading {
+    display: block;
+    font-weight: bold;
+}
+
+.skill-list ul {
+   padding-left: 1em; 
+}

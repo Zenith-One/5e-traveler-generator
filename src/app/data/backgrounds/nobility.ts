@@ -11,5 +11,11 @@ export const nobility: Background = {
 
     ],
     languages: ['Common','one extra language of your choice'],
-    skills: [Skills.history, Skills.persuasion]
+    skills: [Skills.history, Skills.persuasion],
+    proficiencies: [
+        {category: 'weapon', name: 'longsword'},
+        {category: 'weapon', name: 'rapier'},
+        {category: 'weapon', name: 'lance'},
+        {category: 'weapon', name: 'shortbow'}
+    ]
 }

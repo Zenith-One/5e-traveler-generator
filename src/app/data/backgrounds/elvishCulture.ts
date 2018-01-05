@@ -9,5 +9,11 @@ export const elvishCulture: Background = {
         {name: 'Keen Senses', text: 'You have proficiency in the Perception skill.'}
     ],
     languages: ['Common','Elvish','one extra language of your choice'],
-    skills: [Skills.perception]
+    skills: [Skills.perception],
+    proficiencies: [
+        {category: 'weapon', name: 'longsword'},
+        {category: 'weapon', name: 'shortsword'},
+        {category: 'weapon', name: 'longbow'},
+        {category: 'weapon', name: 'shortbow'}
+    ]
 }

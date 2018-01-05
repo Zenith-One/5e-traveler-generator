@@ -53,6 +53,11 @@ export const serf: Career = {
         'You gain tool proficiency with a gaming set of your choice.',
         'You gain weapon proficiency with the sickle and club.'
     ],
+    basicTrainingProficiencies: [
+        {category: 'weapon', name: 'sickle'},
+        {category: 'weapon', name: 'club'},
+        {category: 'tool', name: 'gaming set of your choice'}
+    ],
     specializations: [
         laborer,
         handyman,

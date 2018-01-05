@@ -53,6 +53,11 @@ export const scout: Career = {
         'You gain tool proficiency with Calligrapher\'s tools.',
         'You gain weapon proficiency with the dagger and shortsword.'
     ],
+    basicTrainingProficiencies: [
+        {category: 'tool', name: "calligrapher's tools"},
+        {category: 'weapon', name: "dagger"},
+        {category: 'weapon', name: "shortsword"}
+    ],
     specializations: [
         courier,
         surveyor,

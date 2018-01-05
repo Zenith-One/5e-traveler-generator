@@ -1,5 +1,6 @@
 import {AbilityScoreName, AbilityScores} from './race';
 import {standard} from './core';
+import { Proficiency } from './proficiency';
 
 export interface DC {
     dc: number; 
@@ -27,15 +28,18 @@ export interface CareerRank {
     benefit: string;
 }
 
-export interface Career extends standard{
+export class Career implements standard{
+    name: string;
+    description: string;
     qualify: DC;
     basicTraining: string[];
+    basicTrainingProficiencies: Proficiency[];
     specializations: CareerSpecialization[];
     benefits: CareerBenefit[];
     ranks: CareerRank[];
 }
 
-export interface CareerRecord {
+export class CareerRecord {
     careerName: string;
     career: Career;
     joinedAge: number;

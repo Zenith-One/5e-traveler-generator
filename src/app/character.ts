@@ -2,9 +2,16 @@ import {AbilityScores, AbilityScoreName, Race, Size} from './race';
 import {RaceService} from './race.service';
 import {Skill, Skills} from './skill.enum';
 import { Background } from './background';
-import {backgrounds} from './data/backgrounds/index';
+import { backgrounds } from './data/backgrounds/index';
 import { Connection } from './connection';
 import { CareerBenefit } from './career';
+import { Proficiency } from './proficiency';
+import * as core from './core';
+
+interface ProficiencyRecord extends Proficiency {
+    source: 'background' | 'race' | 'career',
+    sourceName?: string;
+}
 
 interface WorkHistory {
     name: string;
@@ -25,6 +32,8 @@ export class Character {
     age: number;
     abilityScores: AbilityScores;
     skills: Skill[];
+    proficiencies: ProficiencyRecord[] = [];
+    languages: string[] = [];
     events: any[];
     background: Background;
     workHistory: WorkHistory[];
@@ -64,6 +73,11 @@ export class Character {
 
     setBackground(background: Background){
         this.background = background;
+        let records: ProficiencyRecord[] = background.proficiencies.map((item: Proficiency) => {
+            let r: ProficiencyRecord = {category: item.category, name: item.name, source: 'background'};
+            return r;
+        })
+        this.proficiencies = core.unique(this.proficiencies.concat(records));
     }
 
     getRacialTraits(){
@@ -94,6 +108,10 @@ export class Character {
         return c;
     }
 
+    getHeightDisplay(){
+        return RaceService.getHeightDisplay(this.size);
+    }
+
     serialize(){
         let raw = JSON.parse(JSON.stringify(this));
         raw.race = this.race.name;
@@ -111,8 +129,8 @@ export class Character {
         c.step = raw.step;
         c.setName(raw.name);
         c.setSex(raw.sex);
+        c.setBackground(background);
         c.abilityScores = raw.abilityScores;
-        c.background = background;
         c.size = raw.size;
         c.skills = raw.skills;
         c.age = raw.age;

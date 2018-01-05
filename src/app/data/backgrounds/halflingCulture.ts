@@ -8,5 +8,6 @@ export const halflingCulture: Background = {
         {name: 'Food Connoisseur', text: 'Whenever you make an Intelligence (History) check related to the origin of a particular dish, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus.'}
     ],
     languages: ['Common','Halfling'],
-    skills: []
+    skills: [],
+    proficiencies: []
 }

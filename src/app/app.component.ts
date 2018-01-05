@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 
 import { Character } from './character';
 
-let devStep = 5;
+let devStep = 0;
 
 let devData = [
   '{"step":2,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[],"age":50}',
   '{"step":3,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male"}',
   '{"step":4,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male"}',
-  '{"step":5,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male","background":"Nobility"}'
+  '{"step":5,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male","background":"Dwarven Culture"}'
 ];
 
 @Component({

@@ -10,5 +10,11 @@ export const wilderness: Background = {
         {name: 'Gatherer', text: 'You have advantage on any navigation-related skill checks for areas you are familiar with. In addition, you can find food and fresh water for yourself and up to five other people each day, provided that the land offers suitable food and water supplies.'}
     ],
     languages: ['Common (or if you prefer, the primary language of the closest settlement)'],
-    skills: [Skills.survival]
+    skills: [Skills.survival],
+    proficiencies: [
+        {category: 'weapon', name: 'spear'},
+        {category: 'weapon', name: 'shortbow'},
+        {category: 'weapon', name: 'javelin'},
+        {category: 'weapon', name: 'dagger'}
+    ]
 }

@@ -53,6 +53,10 @@ export const vagabond: Career = {
     basicTraining: [
         'You gain weapon proficiency with the dagger and club.'
     ],
+    basicTrainingProficiencies: [
+        {category: 'weapon', name: 'dagger'},
+        {category: 'weapon', name: 'club'}
+    ],
     specializations: [
         savage,
         scavenger,

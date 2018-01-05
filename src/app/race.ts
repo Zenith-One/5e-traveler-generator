@@ -45,7 +45,7 @@ export interface NameGeneratorSettings {
   sexAgnostic?: boolean;
 }
 
-export interface Race {
+export class Race {
   name: string;
   description: string;
   abilityScores: AbilityScores;

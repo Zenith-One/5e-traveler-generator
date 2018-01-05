@@ -9,5 +9,11 @@ export const orcishCulture: Background = {
         {name: 'Menacing', text: 'You have proficiency in the Intimidation skill.'}
     ],
     languages: ['Common','Orcish'],
-    skills: [Skills.intimidation]
+    skills: [Skills.intimidation],
+    proficiencies: [
+        {category: 'weapon', name: 'greataxe'},
+        {category: 'weapon', name: 'handaxe'},
+        {category: 'weapon', name: 'javelin'},
+        {category: 'weapon', name: 'spear'}
+    ]
 }

@@ -10,5 +10,12 @@ export const cityUrchin: Background = {
         {name: 'Street Smarts', text: 'You gain proficiency in one of the following tools: Disguise kit or Thieves’ tools.'}
     ],
     languages: ['Common (or if you prefer, the main language of the city you grew up in)'],
-    skills: [Skills.sleightOfHand]
+    skills: [Skills.sleightOfHand],
+    proficiencies: [
+        {category: 'weapon', name: 'dagger'},
+        {category: 'weapon', name: 'sling'},
+        {category: 'weapon', name: 'club'},
+        {category: 'weapon', name: 'unarmed strike'},
+        {category: 'tool', name: 'disguise kit or thieves\' tools'}
+    ]
 }

@@ -54,6 +54,10 @@ export const soldier: Career = {
         'You gain proficiency with shields.',
         'You gain tool proficiency with a gaming set of your choice.'
     ],
+    basicTrainingProficiencies: [
+        {category: 'armor', name: 'shields'},
+        {category: 'tool', name: 'gaming set of your choice'}
+    ],
     specializations: [
         infantry,
         guard,

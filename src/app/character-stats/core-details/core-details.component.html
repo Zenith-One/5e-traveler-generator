@@ -1,7 +1,45 @@
-<h4>Ability Scores</h4>
+<h5>Ability Scores</h5>
 <ul class="ability-scores row">
     <li class="col-4" 
         *ngFor="let ability of ['strength','dexterity','constitution','intelligence','wisdom','charisma']">
         <strong>{{ability}}: </strong> <span class="score">{{getAbilityScoreDisplay(ability)[0]}}</span> ({{getAbilityScoreDisplay(ability)[1]}})
     </li>
 </ul>
+<hr>
+<h5>Physical Appearance</h5>
+<div class="row">
+    <div class="col-4">
+        <strong>Age: </strong> {{character.age}} years old
+    </div>
+    <div class="col-4">
+        <strong>Height: </strong> {{character.getHeightDisplay()}}
+    </div>
+    <div class="col-4">
+        <strong>Weight: </strong> {{character.size.weight}} lbs.
+    </div>
+</div>
+<hr>
+<h5>Proficiencies</h5>
+<div class="row">
+    <div class="col-4 skill-list">
+        <span class="heading">Tools:</span>
+        <ul *ngIf="getProficiencies('tool').length != 0">
+            <li *ngFor="let p of getProficiencies('tool')">{{p.name}} ({{p.source}})</li>
+        </ul>
+        <p *ngIf="getProficiencies('tool').length == 0">None</p>
+    </div>
+    <div class="col-4 skill-list">
+        <span class="heading">Weapons:</span>
+        <ul *ngIf="getProficiencies('weapon').length != 0">
+            <li *ngFor="let p of getProficiencies('weapon')">{{p.name}} ({{p.source}})</li>
+        </ul>
+        <p *ngIf="getProficiencies('weapon').length == 0">None</p>
+    </div>
+    <div class="col-4 skill-list">
+        <span class="heading">Armor:</span>
+        <ul *ngIf="getProficiencies('armor').length != 0">
+            <li *ngFor="let p of getProficiencies('armor')">{{p.name}} ({{p.source}})</li>
+        </ul>
+        <p *ngIf="getProficiencies('armor').length == 0">None</p>
+    </div>
+</div>
