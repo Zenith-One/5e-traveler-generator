@@ -1,0 +1,10 @@
+<div>
+  <h3>{{background.name}}</h3>
+  <p>{{background.description}}</p>
+  <p *ngFor="let f of background.features">
+    <strong>{{f.name}}:</strong> {{f.text}}
+  </p>
+  <p>
+    <strong>Languages:</strong> You can speak, read and write {{getLanguageDisplay()}}
+  </p>
+</div>

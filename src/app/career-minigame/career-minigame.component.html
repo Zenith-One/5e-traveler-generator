@@ -1,0 +1,11 @@
+<h2>Character Development</h2>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active': tab==='develop'}">Develop Your Character</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active': tab==='stats'}">Character Details</a>
+    </li>
+</ul>
+<character-stats [character]="character" *ngIf="tab==='stats'"></character-stats>
+

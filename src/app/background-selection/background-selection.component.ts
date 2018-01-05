@@ -13,24 +13,17 @@ export class BackgroundSelectionComponent {
   @Output() onComplete: EventEmitter<any> = new EventEmitter();
 
   backgrounds = backgrounds;
-  selectedBackground: Background;
+  selectedBackground: Background = backgrounds[0];
 
   constructor() { }
 
-  getBackgroundLanguageDisplay(){
-    let lang = this.selectedBackground.languages.slice();
-    if(lang.length < 2){
-      return lang[0] + '.';
-    } 
-    
-    let lastTwo = lang.splice(lang.length-2,2).join(' and ');
-    lang.push(lastTwo);
-
-    return lang.join(', ') + '.';
-  }
-
   selectBackground(b: Background){
     this.selectedBackground = b;
+  }
+
+  finalizeBackground(){
+    this.character.setBackground(this.selectedBackground);
+    this.onComplete.emit(true);
   }
 
 }

@@ -1,0 +1,16 @@
+<h3 class="text-center">{{character.name}}, the {{character.sex.toLowerCase()}} {{character.race.name}}</h3>
+
+<div class="row">
+    <div class="col-2 option-list">
+        <ul>
+            <li [ngClass]="{'selected': category === 'core'}" (click)="selectCategory('core')">Core Details</li>
+            <li [ngClass]="{'selected': category === 'race'}" (click)="selectCategory('race')">Race</li>
+            <li [ngClass]="{'selected': category === 'background'}" (click)="selectCategory('background')">Background</li>
+        </ul>
+    </div>
+    <div class="col-10">
+        <core-details [character]="character" *ngIf="category==='core'"></core-details>
+        <race-details [race]="character.race" *ngIf="category==='race'"></race-details>
+        <background-details [background]="character.background" *ngIf="category==='background'"></background-details>
+    </div>
+</div>

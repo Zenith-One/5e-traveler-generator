@@ -13,19 +13,7 @@
     </ul>
   </div>
   <div class="col-10">
-    <div *ngIf="selectedRace && !raceLocked">
-      <h3>{{selectedRace.name}}</h3>
-      <p>{{selectedRace.description}}</p>
-      <p><strong>Size: </strong>{{selectedRace.sizeFactors.description}} 
-        On average you will be around {{getHeightDisplay(getAverageSize())}} tall and 
-        weigh about {{getAverageSize().weight}} lbs.
-      </p>
-      <p><strong>Speed: </strong> Your base walking speed is {{selectedRace.speed}} ft.</p>
-      <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>
-      <div>
-        <p *ngFor="let f of selectedRace.features"><strong>{{f.name}}:</strong> {{f.text}}</p>
-      </div>
-    </div>
+    <race-details [race]="selectedRace"></race-details>
   </div>
 </div>
 

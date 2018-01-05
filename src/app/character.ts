@@ -2,15 +2,33 @@ import {AbilityScores, AbilityScoreName, Race, Size} from './race';
 import {RaceService} from './race.service';
 import {Skill, Skills} from './skill.enum';
 import { Background } from './background';
+import {backgrounds} from './data/backgrounds/index';
+import { Connection } from './connection';
+import { CareerBenefit } from './career';
+
+interface WorkHistory {
+    name: string;
+    specialty: string;
+    skillProficiencies: string[];
+    toolProficiencies: string[];
+    rank: number;
+    totalBenefitsEarned: number;
+    benefitsEarned: CareerBenefit[];
+    retired: boolean;
+}
 
 export class Character {
+    step: number;
     name: string;
     sex: 'Male' | 'Female';
     size: Size;
+    age: number;
     abilityScores: AbilityScores;
     skills: Skill[];
     events: any[];
     background: Background;
+    workHistory: WorkHistory[];
+    connections: Connection[] = [];
 
     constructor(public race: Race){
         this.size = RaceService.getSize(this.race);
@@ -24,6 +42,7 @@ export class Character {
         };
         this.skills = [];
         this.events = [];
+        this.age = race.age.startingAge;
     }
 
     setSex(sex: 'Male' | 'Female'){
@@ -68,6 +87,38 @@ export class Character {
         c.background = cdata.background;
         c.size = cdata.size;
         c.skills = cdata.skills;
+        c.age = cdata.age;
+        c.connections = cdata.connections;
+        c.workHistory = cdata.workHistory;
+        console.log(c);
+        return c;
+    }
+
+    serialize(){
+        let raw = JSON.parse(JSON.stringify(this));
+        raw.race = this.race.name;
+        if(this.background && this.background.name){
+            raw.background = this.background.name;
+        }
+        return JSON.stringify(raw);
+    }
+
+    static deserialize(str: string){
+        let raw = JSON.parse(str);
+        let race = RaceService.races.filter((item:Race) => item.name === raw.race)[0];
+        let background = backgrounds.filter((item:Background)=>item.name === raw.background)[0];
+        let c = new Character(race);
+        c.step = raw.step;
+        c.setName(raw.name);
+        c.setSex(raw.sex);
+        c.abilityScores = raw.abilityScores;
+        c.background = background;
+        c.size = raw.size;
+        c.skills = raw.skills;
+        c.age = raw.age;
+        c.connections = raw.connections;
+        c.workHistory = raw.workHistory;
+        console.log(c);
         return c;
     }
 }

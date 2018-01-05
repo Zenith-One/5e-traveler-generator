@@ -1,0 +1,13 @@
+<div>
+  <h3>{{race.name}}</h3>
+  <p>{{race.description}}</p>
+  <p><strong>Size: </strong>{{race.sizeFactors.description}} 
+    On average you will be around {{getHeightDisplay(getAverageSize())}} tall and 
+    weigh about {{getAverageSize().weight}} lbs.
+  </p>
+  <p><strong>Speed: </strong> Your base walking speed is {{race.speed}} ft.</p>
+  <p><strong>Ability Scores: </strong> {{getSelectedRaceAbilityScoreMods()}}</p>
+  <div>
+    <p *ngFor="let f of race.features"><strong>{{f.name}}:</strong> {{f.text}}</p>
+  </div>
+</div>

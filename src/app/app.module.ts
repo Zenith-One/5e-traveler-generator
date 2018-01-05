@@ -12,6 +12,11 @@ import { RaceSelectionComponent } from './race-selection/race-selection.componen
 import { AbilityScoreSelectionComponent } from './ability-score-selection/ability-score-selection.component';
 import { BackgroundSelectionComponent } from './background-selection/background-selection.component';
 import { NameSelectionComponent } from './name-selection/name-selection.component';
+import { CareerMinigameComponent } from './career-minigame/career-minigame.component';
+import { CharacterStatsComponent } from './character-stats/character-stats.component';
+import { CoreDetailsComponent } from './character-stats/core-details/core-details.component';
+import { BackgroundDetailsComponent } from './background-details/background-details.component';
+import { RaceDetailsComponent } from './race-details/race-details.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +24,12 @@ import { NameSelectionComponent } from './name-selection/name-selection.componen
     RaceSelectionComponent,
     AbilityScoreSelectionComponent,
     BackgroundSelectionComponent,
-    NameSelectionComponent
+    NameSelectionComponent,
+    CareerMinigameComponent,
+    CharacterStatsComponent,
+    CoreDetailsComponent,
+    BackgroundDetailsComponent,
+    RaceDetailsComponent
   ],
   imports: [
     BrowserModule,

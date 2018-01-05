@@ -2,10 +2,33 @@
 <div style="text-align:center">
   <h1>Traveler-Style 5e Character Generator</h1>
 </div>
-<div>
+<div *ngIf="!isExporting && !isImporting">
    <race-selection (onComplete)="handleRaceSelection($event)" *ngIf="step==1"></race-selection>
    <name-selection (onComplete)="handleNameSelection()" [character]="character" *ngIf="step==2"></name-selection>
    <ability-score-selection (onComplete)="handleAbilitySelection()" [character]="character" *ngIf="step==3"></ability-score-selection>
    <background-selection (onComplete)="handleBackgroundSelection()" [character]="character" *ngIf="step==4"></background-selection>
+   <career-minigame [character]="character" *ngIf="step==5"></career-minigame>
 </div>
-<footer style="margin-bottom:60px;"></footer>
+<div *ngIf="isExporting">
+  <div class="card">
+    <div class="card-body">
+      <textarea style="height:250px;overflow:hidden;" class="form-control" [value]="getExportedCharacter()"></textarea>
+    </div>
+  </div>
+</div>
+<div *ngIf="isImporting">
+  <div class="card">
+    <div class="card-body">
+      <div class="alert alert-warning" *ngIf="importError">{{importError}}</div>
+      <textarea style="height:250px;overflow:hidden;" class="form-control" (change)="clearImportError()" [(ngModel)]="importString" placeholder="Paste import string here."></textarea>
+      <button class="btn btn-primary" (click)="doImport()">Import it!</button>
+
+    </div>
+  </div>
+</div>
+<footer style="margin:60px;">
+  <button class="btn btn-success" *ngIf="step === 1" (click)="showImport()">Import</button>
+  <button class="btn btn-danger" *ngIf="isImporting" (click)="hideImport()">Close Import</button>
+  <button class="btn btn-warning" *ngIf="step > 1" (click)="showExport()">Export</button>
+  <button class="btn btn-danger" *ngIf="isExporting" (click)="hideExport()">Close Export</button>
+</footer>

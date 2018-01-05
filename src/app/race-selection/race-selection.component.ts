@@ -16,8 +16,8 @@ export class RaceSelectionComponent  {
   name: string;
   sex: 'Male' | 'Female';
   selected: string;
-  selectedRace: Race;
   races = RaceService.races;
+  selectedRace: Race = this.races[0];
   raceLocked: boolean = false;
 
   constructor(private raceService: RaceService, private nameService: NameService){}
@@ -28,23 +28,6 @@ export class RaceSelectionComponent  {
 
   lockInRace(){
     this.finalizeRaceSelection();
-  }
-
-  getAverageSize(){
-    return RaceService.getAverageSize(this.selectedRace);
-  }
-
-  getHeightDisplay(s: Size){
-    return RaceService.getHeightDisplay(s);
-  }
-
-  getSelectedRaceAbilityScoreMods(){
-    let mods = RaceService.getAbilityModifiers(this.selectedRace);
-    return mods.map((item)=>{
-      let name = item.name.substr(0,1).toUpperCase() + item.name.substr(1);
-      let value = item.value > 0 ? '+' + item.value : item.value;
-      return name + ' ' + value;
-    }).join(', ');
   }
 
   finalizeRaceSelection(){

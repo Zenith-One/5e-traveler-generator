@@ -1,0 +1,14 @@
+ul.ability-scores {
+    list-style: none;
+    text-transform: capitalize
+}
+
+ul.ability-scores strong {
+    display: inline-block;
+    width: 7em;
+}
+
+span.score {
+    display: inline-block;
+    width: 2em;
+}

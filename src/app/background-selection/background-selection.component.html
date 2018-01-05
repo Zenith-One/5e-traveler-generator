@@ -1,22 +1,17 @@
-<h2>Background Selection for {{character.name}}</h2>
+<h2>Step 4: Background Selection for {{character.name}}</h2>
 <div class="row">
   <div class="col-2 option-list">
     <ul>
       <li *ngFor="let b of backgrounds" (click)="selectBackground(b)" [ngClass]="{'selected': selectedBackground && selectedBackground.name === b.name}">
         {{b.name}}
       </li>
+      <li *ngIf="selectedBackground">
+        <button class="btn btn-primary" (click)="finalizeBackground()">Continue</button>
+      </li>
     </ul>
   </div>
   <div class="col-10">
-    <div *ngIf="selectedBackground">
-      <h3>{{selectedBackground.name}}</h3>
-      <p>{{selectedBackground.description}}</p>
-      <p *ngFor="let f of selectedBackground.features">
-        <strong>{{f.name}}:</strong> {{f.text}}
-      </p>
-      <p>
-        <strong>Languages:</strong> You can speak, read and write {{getBackgroundLanguageDisplay()}}
-      </p>
-    </div>
+    <background-details [background]="selectedBackground" *ngIf="selectedBackground"></background-details>
+
   </div>
 </div>

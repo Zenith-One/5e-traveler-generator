@@ -1,0 +1,7 @@
+<h4>Ability Scores</h4>
+<ul class="ability-scores row">
+    <li class="col-4" 
+        *ngFor="let ability of ['strength','dexterity','constitution','intelligence','wisdom','charisma']">
+        <strong>{{ability}}: </strong> <span class="score">{{getAbilityScoreDisplay(ability)[0]}}</span> ({{getAbilityScoreDisplay(ability)[1]}})
+    </li>
+</ul>
