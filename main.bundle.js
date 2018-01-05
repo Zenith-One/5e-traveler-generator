@@ -189,12 +189,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var devStep = 5;
+var devStep = 0;
 var devData = [
     '{"step":2,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[],"age":50}',
     '{"step":3,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":0,"dexterity":0,"constitution":0,"intelligence":0,"wisdom":0,"charisma":0},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male"}',
     '{"step":4,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male"}',
-    '{"step":5,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male","background":"Nobility"}'
+    '{"step":5,"race":"Dwarf","connections":[],"size":{"category":"medium","description":"Squat and stocky, your size is medium.","height":51,"weight":150},"abilityScores":{"strength":15,"dexterity":14,"constitution":15,"intelligence":12,"wisdom":11,"charisma":8},"skills":[],"events":[],"age":50,"name":"Gimli","sex":"Male","background":"Dwarven Culture"}'
 ];
 var AppComponent = (function () {
     function AppComponent() {
@@ -680,7 +680,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "ul.ability-scores {\r\n    list-style: none;\r\n    text-transform: capitalize\r\n}\r\n\r\nul.ability-scores strong {\r\n    display: inline-block;\r\n    width: 7em;\r\n}\r\n\r\nspan.score {\r\n    display: inline-block;\r\n    width: 2em;\r\n}", ""]);
+exports.push([module.i, "ul.ability-scores {\r\n    list-style: none;\r\n    text-transform: capitalize\r\n}\r\n\r\nul.ability-scores strong {\r\n    display: inline-block;\r\n    width: 7em;\r\n}\r\n\r\nspan.score {\r\n    display: inline-block;\r\n    width: 2em;\r\n}\r\n\r\nspan.heading {\r\n    display: block;\r\n    font-weight: bold;\r\n}\r\n\r\n.skill-list ul {\r\n   padding-left: 1em; \r\n}", ""]);
 
 // exports
 
@@ -693,7 +693,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/character-stats/core-details/core-details.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h4>Ability Scores</h4>\r\n<ul class=\"ability-scores row\">\r\n    <li class=\"col-4\" \r\n        *ngFor=\"let ability of ['strength','dexterity','constitution','intelligence','wisdom','charisma']\">\r\n        <strong>{{ability}}: </strong> <span class=\"score\">{{getAbilityScoreDisplay(ability)[0]}}</span> ({{getAbilityScoreDisplay(ability)[1]}})\r\n    </li>\r\n</ul>"
+module.exports = "<h5>Ability Scores</h5>\r\n<ul class=\"ability-scores row\">\r\n    <li class=\"col-4\" \r\n        *ngFor=\"let ability of ['strength','dexterity','constitution','intelligence','wisdom','charisma']\">\r\n        <strong>{{ability}}: </strong> <span class=\"score\">{{getAbilityScoreDisplay(ability)[0]}}</span> ({{getAbilityScoreDisplay(ability)[1]}})\r\n    </li>\r\n</ul>\r\n<hr>\r\n<h5>Physical Appearance</h5>\r\n<div class=\"row\">\r\n    <div class=\"col-4\">\r\n        <strong>Age: </strong> {{character.age}} years old\r\n    </div>\r\n    <div class=\"col-4\">\r\n        <strong>Height: </strong> {{character.getHeightDisplay()}}\r\n    </div>\r\n    <div class=\"col-4\">\r\n        <strong>Weight: </strong> {{character.size.weight}} lbs.\r\n    </div>\r\n</div>\r\n<hr>\r\n<h5>Proficiencies</h5>\r\n<div class=\"row\">\r\n    <div class=\"col-4 skill-list\">\r\n        <span class=\"heading\">Tools:</span>\r\n        <ul *ngIf=\"getProficiencies('tool').length != 0\">\r\n            <li *ngFor=\"let p of getProficiencies('tool')\">{{p.name}} ({{p.source}})</li>\r\n        </ul>\r\n        <p *ngIf=\"getProficiencies('tool').length == 0\">None</p>\r\n    </div>\r\n    <div class=\"col-4 skill-list\">\r\n        <span class=\"heading\">Weapons:</span>\r\n        <ul *ngIf=\"getProficiencies('weapon').length != 0\">\r\n            <li *ngFor=\"let p of getProficiencies('weapon')\">{{p.name}} ({{p.source}})</li>\r\n        </ul>\r\n        <p *ngIf=\"getProficiencies('weapon').length == 0\">None</p>\r\n    </div>\r\n    <div class=\"col-4 skill-list\">\r\n        <span class=\"heading\">Armor:</span>\r\n        <ul *ngIf=\"getProficiencies('armor').length != 0\">\r\n            <li *ngFor=\"let p of getProficiencies('armor')\">{{p.name}} ({{p.source}})</li>\r\n        </ul>\r\n        <p *ngIf=\"getProficiencies('armor').length == 0\">None</p>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -718,6 +718,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var CoreDetailsComponent = (function () {
     function CoreDetailsComponent() {
     }
+    CoreDetailsComponent.prototype.getProficiencies = function (type) {
+        return this.character.proficiencies
+            .filter(function (item) { return item.category.toLowerCase() === type.toLowerCase(); })
+            .sort(function (a, b) {
+            if (a.name < b.name)
+                return -1;
+            if (a.name > b.name)
+                return 1;
+            return 0;
+        });
+    };
     CoreDetailsComponent.prototype.getAbilityScoreDisplay = function (ability) {
         return [this.character.abilityScores[ability] + '', this.getAbilityBonus(ability)];
     };
@@ -743,8 +754,7 @@ CoreDetailsComponent = __decorate([
         selector: 'core-details',
         template: __webpack_require__("../../../../../src/app/character-stats/core-details/core-details.component.html"),
         styles: [__webpack_require__("../../../../../src/app/character-stats/core-details/core-details.component.css")]
-    }),
-    __metadata("design:paramtypes", [])
+    })
 ], CoreDetailsComponent);
 
 var _a;
@@ -758,12 +768,16 @@ var _a;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__race_service__ = __webpack_require__("../../../../../src/app/race.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__data_backgrounds_index__ = __webpack_require__("../../../../../src/app/data/backgrounds/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__core__ = __webpack_require__("../../../../../src/app/core.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Character; });
+
 
 
 var Character = (function () {
     function Character(race) {
         this.race = race;
+        this.proficiencies = [];
+        this.languages = [];
         this.connections = [];
         this.size = __WEBPACK_IMPORTED_MODULE_0__race_service__["a" /* RaceService */].getSize(this.race);
         this.abilityScores = {
@@ -793,6 +807,11 @@ var Character = (function () {
     };
     Character.prototype.setBackground = function (background) {
         this.background = background;
+        var records = background.proficiencies.map(function (item) {
+            var r = { category: item.category, name: item.name, source: 'background' };
+            return r;
+        });
+        this.proficiencies = __WEBPACK_IMPORTED_MODULE_2__core__["a" /* unique */](this.proficiencies.concat(records));
     };
     Character.prototype.getRacialTraits = function () {
         return this.race.features;
@@ -818,6 +837,9 @@ var Character = (function () {
         console.log(c);
         return c;
     };
+    Character.prototype.getHeightDisplay = function () {
+        return __WEBPACK_IMPORTED_MODULE_0__race_service__["a" /* RaceService */].getHeightDisplay(this.size);
+    };
     Character.prototype.serialize = function () {
         var raw = JSON.parse(JSON.stringify(this));
         raw.race = this.race.name;
@@ -834,8 +856,8 @@ var Character = (function () {
         c.step = raw.step;
         c.setName(raw.name);
         c.setSex(raw.sex);
+        c.setBackground(background);
         c.abilityScores = raw.abilityScores;
-        c.background = background;
         c.size = raw.size;
         c.skills = raw.skills;
         c.age = raw.age;
@@ -848,6 +870,26 @@ var Character = (function () {
 }());
 
 //# sourceMappingURL=character.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/core.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = unique;
+function unique(items) {
+    var namesUsed = [];
+    var itemsOut = [];
+    items.forEach(function (item) {
+        if (namesUsed.indexOf(item.name) < 0) {
+            namesUsed.push(item.name);
+            itemsOut.push(item);
+        }
+    });
+    return itemsOut;
+}
+//# sourceMappingURL=core.js.map
 
 /***/ }),
 
@@ -867,7 +909,14 @@ var cityUrchin = {
         { name: 'Street Smarts', text: 'You gain proficiency in one of the following tools: Disguise kit or Thieves’ tools.' }
     ],
     languages: ['Common (or if you prefer, the main language of the city you grew up in)'],
-    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].sleightOfHand]
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].sleightOfHand],
+    proficiencies: [
+        { category: 'weapon', name: 'dagger' },
+        { category: 'weapon', name: 'sling' },
+        { category: 'weapon', name: 'club' },
+        { category: 'weapon', name: 'unarmed strike' },
+        { category: 'tool', name: 'disguise kit or thieves\' tools' }
+    ]
 };
 //# sourceMappingURL=cityUrchin.js.map
 
@@ -887,7 +936,14 @@ var dwarvenCulture = {
         { name: 'Stonecunning', text: 'Whenever you make an Intelligence (History) check related to the origin of stonework, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus.' }
     ],
     languages: ['Common', 'Dwarvish'],
-    skills: []
+    skills: [],
+    proficiencies: [
+        { category: 'weapon', name: 'battleaxe' },
+        { category: 'weapon', name: 'handaxe' },
+        { category: 'weapon', name: 'warhammer' },
+        { category: 'weapon', name: 'light hammer' },
+        { category: 'tool', name: "smith's tools, brewer's supplies, or mason's tools" }
+    ]
 };
 //# sourceMappingURL=dwarvenCulture.js.map
 
@@ -908,7 +964,13 @@ var elvishCulture = {
         { name: 'Keen Senses', text: 'You have proficiency in the Perception skill.' }
     ],
     languages: ['Common', 'Elvish', 'one extra language of your choice'],
-    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].perception]
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].perception],
+    proficiencies: [
+        { category: 'weapon', name: 'longsword' },
+        { category: 'weapon', name: 'shortsword' },
+        { category: 'weapon', name: 'longbow' },
+        { category: 'weapon', name: 'shortbow' }
+    ]
 };
 //# sourceMappingURL=elvishCulture.js.map
 
@@ -927,7 +989,10 @@ var gnomishCulture = {
         { name: 'Tinker', text: 'You have proficiency with artisan’s tools (tinker’s tools). Using those tools, you can spend 1 hour and 10 gp worth of materials to construct a Tiny clockwork device (AC 5, 1 hp). The device ceases to function after 24 hours (unless you spend 1 hour repairing it to keep the device functioning), or when you use your action to dismantle it; at that time, you can reclaim the materials used to create it. You can have up to three such devices active at a time. Consult the Players Handbook under the Gnome entry for a list of devices you can create, or consult your Game Master.' }
     ],
     languages: ['Common', 'Gnomish'],
-    skills: []
+    skills: [],
+    proficiencies: [
+        { category: 'tool', name: 'tinker\'s tools' }
+    ]
 };
 //# sourceMappingURL=gnomishCulture.js.map
 
@@ -946,7 +1011,8 @@ var halflingCulture = {
         { name: 'Food Connoisseur', text: 'Whenever you make an Intelligence (History) check related to the origin of a particular dish, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus.' }
     ],
     languages: ['Common', 'Halfling'],
-    skills: []
+    skills: [],
+    proficiencies: []
 };
 //# sourceMappingURL=halflingCulture.js.map
 
@@ -1003,7 +1069,13 @@ var nobility = {
         { name: 'Birthright', text: 'Your noble birth means that, when travelling in lands that recognise your nation, commoners will treat you with respect and deference (at least until your reputation or gold runs out), and other nobles will regard you as in the same social sphere. You may need to provide proof of your status; this can be in the form of documents on your person or passing the scrunity of a retainer trained in the extensive lineage of nobility of your nation.' }
     ],
     languages: ['Common', 'one extra language of your choice'],
-    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].history, __WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].persuasion]
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].history, __WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].persuasion],
+    proficiencies: [
+        { category: 'weapon', name: 'longsword' },
+        { category: 'weapon', name: 'rapier' },
+        { category: 'weapon', name: 'lance' },
+        { category: 'weapon', name: 'shortbow' }
+    ]
 };
 //# sourceMappingURL=nobility.js.map
 
@@ -1024,7 +1096,13 @@ var orcishCulture = {
         { name: 'Menacing', text: 'You have proficiency in the Intimidation skill.' }
     ],
     languages: ['Common', 'Orcish'],
-    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].intimidation]
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].intimidation],
+    proficiencies: [
+        { category: 'weapon', name: 'greataxe' },
+        { category: 'weapon', name: 'handaxe' },
+        { category: 'weapon', name: 'javelin' },
+        { category: 'weapon', name: 'spear' }
+    ]
 };
 //# sourceMappingURL=orcishCulture.js.map
 
@@ -1046,7 +1124,13 @@ var wilderness = {
         { name: 'Gatherer', text: 'You have advantage on any navigation-related skill checks for areas you are familiar with. In addition, you can find food and fresh water for yourself and up to five other people each day, provided that the land offers suitable food and water supplies.' }
     ],
     languages: ['Common (or if you prefer, the primary language of the closest settlement)'],
-    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].survival]
+    skills: [__WEBPACK_IMPORTED_MODULE_0__skill_enum__["a" /* Skills */].survival],
+    proficiencies: [
+        { category: 'weapon', name: 'spear' },
+        { category: 'weapon', name: 'shortbow' },
+        { category: 'weapon', name: 'javelin' },
+        { category: 'weapon', name: 'dagger' }
+    ]
 };
 //# sourceMappingURL=wilderness.js.map
 
@@ -1777,7 +1861,7 @@ var RaceDetailsComponent = (function () {
 }());
 __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Input */])(),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__race__["Race"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__race__["Race"]) === "function" && _a || Object)
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__race__["b" /* Race */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__race__["b" /* Race */]) === "function" && _a || Object)
 ], RaceDetailsComponent.prototype, "race", void 0);
 RaceDetailsComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */])({
@@ -1972,8 +2056,15 @@ RaceService = __decorate([
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return darkvision; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Race; });
 var darkvision = 'You have darkvision (You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t dicern color in darkness, only shades of gray).';
 ;
+var Race = (function () {
+    function Race() {
+    }
+    return Race;
+}());
+
 //# sourceMappingURL=race.js.map
 
 /***/ }),
